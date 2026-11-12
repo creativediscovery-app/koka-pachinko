@@ -1,0 +1,2016 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Koka Noodles × 5M - Pachinko LGW</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Noto+Sans+JP:wght@900&display=swap');
+
+        :root {
+            --koka-red: #d3122a;
+            --koka-red-dark: #800010;
+            --koka-red-deep: #120205;
+            --koka-yellow: #ffd100;
+            --neon-gold: #fff275;
+            --neon-cyan: #00f0ff;
+            --neon-pink: #ff0055;
+            --font-main: 'Outfit', sans-serif;
+            --font-anime: 'Noto Sans JP', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: radial-gradient(circle at center, #800010 0%, #300006 55%, var(--koka-red-deep) 100%);
+            background-color: var(--koka-red-deep);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100vw;
+            margin: 0;
+            padding: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Subtle Background Overlay */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            opacity: 0.05;
+            background-image: radial-gradient(circle at 100% 150%, #fff 24%, transparent 25%),
+                              radial-gradient(circle at 0% 150%, #fff 24%, transparent 25%),
+                              radial-gradient(circle at 50% 100%, #fff 10%, transparent 11%);
+            background-size: 30px 15px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* TOP KIOSK / ADMIN STATUS BAR */
+        .admin-top-bar {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .admin-top-bar > * {
+            pointer-events: auto;
+        }
+
+        .kiosk-btn {
+            background: rgba(18, 2, 5, 0.9);
+            border: 2px solid var(--koka-yellow);
+            color: var(--koka-yellow);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+
+        .kiosk-btn:active {
+            transform: scale(0.95);
+        }
+
+        .kiosk-btn.locked {
+            border-color: #ff0055;
+            color: #ff0055;
+            background: rgba(40, 0, 10, 0.95);
+        }
+
+        .kiosk-btn.unlocked {
+            border-color: #00ff88;
+            color: #00ff88;
+            background: rgba(0, 30, 15, 0.95);
+        }
+
+        /* BRAND HEADER WITH PNG LOGO SLOTS */
+        .brand-header {
+            text-align: center;
+            margin-top: 35px;
+            margin-bottom: 8px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            background: rgba(15, 0, 3, 0.88);
+            padding: 8px 24px;
+            border-radius: 50px;
+            border: 2px solid var(--koka-yellow);
+            box-shadow: 0 0 30px rgba(211, 18, 42, 0.8), inset 0 0 15px rgba(255, 209, 0, 0.3);
+        }
+
+        .brand-logo-img {
+            height: 42px;
+            max-width: 140px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+        }
+
+        .logo-fallback-text {
+            color: var(--koka-yellow);
+            font-weight: 900;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0px #000;
+        }
+
+        .logo-divider {
+            font-size: 1.8rem;
+            color: var(--koka-yellow);
+            font-weight: 900;
+            text-shadow: 0 0 10px var(--koka-yellow);
+        }
+
+        .subtitle-tag {
+            font-size: 0.85rem;
+            color: var(--koka-yellow);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 900;
+            text-shadow: 0 0 10px rgba(255, 209, 0, 0.8);
+            margin-top: 2px;
+        }
+
+        /* PACHINKO CABINET CONTAINER */
+        .pachinko-cabinet {
+            position: relative;
+            width: 92vw;
+            max-width: 900px;
+            height: 62vh;
+            max-height: 550px;
+            background: rgba(18, 2, 5, 0.94);
+            border: 5px solid var(--koka-yellow);
+            box-shadow: 0 0 45px var(--koka-red), inset 0 0 25px rgba(255, 209, 0, 0.25);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+            padding: 10px;
+        }
+
+        /* LOCKED OVERLAY ON CABINET */
+        .cabinet-lock-banner {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 0, 3, 0.78);
+            backdrop-filter: blur(3px);
+            z-index: 30;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .cabinet-lock-banner.hidden {
+            display: none;
+        }
+
+        .lock-badge-icon {
+            font-size: 3.5rem;
+            filter: drop-shadow(0 0 15px #ff0055);
+            animation: pulseLock 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseLock {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .lock-text-title {
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px #ff0055;
+            text-align: center;
+        }
+
+        .lock-text-sub {
+            color: var(--koka-yellow);
+            font-size: 0.9rem;
+            font-weight: 700;
+            background: rgba(0,0,0,0.6);
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--koka-yellow);
+        }
+
+        canvas#pachinkoCanvas {
+            background: radial-gradient(circle at top, #280007 0%, #080002 100%);
+            border-radius: 12px;
+            border: 2px solid rgba(255, 209, 0, 0.4);
+            box-shadow: inset 0 0 20px rgba(211, 18, 42, 0.7);
+            width: 100%;
+            height: 80%;
+            display: block;
+        }
+
+        /* CONTROLS AREA */
+        .controls-area {
+            width: 100%;
+            height: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 4px 0 4px;
+            gap: 12px;
+        }
+
+        .display-panel {
+            flex: 1;
+            text-align: center;
+            background: rgba(10, 0, 3, 0.88);
+            border: 2px solid var(--koka-red);
+            padding: 10px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px var(--koka-yellow);
+            border-radius: 10px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn {
+            min-width: 220px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--koka-red), #ff1a3c);
+            color: var(--koka-yellow);
+            border-radius: 12px;
+            border: 3px solid var(--koka-yellow);
+            font-family: inherit;
+            font-weight: 900;
+            font-size: 1.25rem;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(211, 18, 42, 0.9);
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover:not(:disabled), .action-btn:focus:not(:disabled) {
+            transform: scale(1.04);
+            box-shadow: 0 0 35px var(--koka-yellow);
+            background: linear-gradient(135deg, #ff1a3c, var(--koka-red));
+            outline: none;
+        }
+
+        .action-btn:disabled {
+            background: #2a0e13;
+            border-color: #551d25;
+            color: #7a3c46;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        /* TOUCH-SCREEN & REMOTE KEYPAD MODAL (PIN: 8912) */
+        .pin-modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(8, 0, 3, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 20000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .pin-modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .pin-keypad-card {
+            background: linear-gradient(180deg, #2b0208 0%, #120004 100%);
+            border: 3px solid var(--koka-yellow);
+            box-shadow: 0 0 50px rgba(211, 18, 42, 0.9);
+            border-radius: 24px;
+            padding: 24px;
+            width: 92%;
+            max-width: 440px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .pin-card-title {
+            color: var(--koka-yellow);
+            font-size: 1.3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 0;
+        }
+
+        .pin-hint-sub {
+            font-size: 0.78rem;
+            color: #aaa;
+            margin-top: -8px;
+        }
+
+        .pin-display-box {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 6px 0;
+        }
+
+        .pin-dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--koka-yellow);
+            background: rgba(0,0,0,0.5);
+            transition: all 0.15s ease;
+        }
+
+        .pin-dot.filled {
+            background: var(--koka-yellow);
+            box-shadow: 0 0 12px var(--koka-yellow);
+        }
+
+        .pin-dot.error {
+            border-color: #ff0055;
+            background: #ff0055;
+            box-shadow: 0 0 15px #ff0055;
+        }
+
+        .keypad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            width: 100%;
+        }
+
+        .key-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 2px solid rgba(255, 209, 0, 0.3);
+            color: #ffffff;
+            font-size: 1.6rem;
+            font-weight: 900;
+            height: 58px;
+            border-radius: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s ease, transform 0.1s ease;
+        }
+
+        .key-btn:active, .key-btn:focus {
+            background: var(--koka-yellow);
+            color: #000;
+            transform: scale(0.95);
+            outline: none;
+        }
+
+        .key-btn.action-key {
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .key-btn.clear-key {
+            border-color: rgba(255, 0, 85, 0.5);
+            color: #ff0055;
+        }
+
+        .key-btn.cancel-key {
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #ccc;
+        }
+
+        /* ADMIN STOCK ADJUSTMENT LIST */
+        .admin-options-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .admin-stock-editor {
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 209, 0, 0.25);
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+        }
+
+        .admin-stock-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 4px 6px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+        }
+
+        .admin-stock-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stock-step-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--koka-yellow);
+            background: rgba(255, 209, 0, 0.15);
+            color: var(--koka-yellow);
+            font-weight: 900;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stock-step-btn:active {
+            background: var(--koka-yellow);
+            color: #000;
+        }
+
+        .stock-val-badge {
+            min-width: 38px;
+            text-align: center;
+            color: #00ff88;
+            font-family: monospace;
+            font-size: 0.95rem;
+        }
+
+        .admin-opt-btn {
+            background: rgba(255, 209, 0, 0.12);
+            border: 1px solid var(--koka-yellow);
+            color: var(--koka-yellow);
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.2s ease;
+        }
+
+        .admin-opt-btn:active, .admin-opt-btn:focus {
+            background: var(--koka-yellow);
+            color: #000;
+            outline: none;
+        }
+
+        /* GACHA VICTORY OVERLAY */
+        .gacha-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(10, 0, 3, 0.96);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+            overflow: hidden;
+        }
+
+        .gacha-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        canvas#speedlinesCanvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .impact-flash {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffffff;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .impact-flash.flash-now {
+            animation: gachaFlash 0.4s ease-out forwards;
+        }
+
+        @keyframes gachaFlash {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 0; }
+        }
+
+        .gacha-card-container {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-width: 650px;
+            width: 90%;
+            transform: scale(0.7) translateY(40px);
+            opacity: 0;
+            transition: all 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .gacha-overlay.active .gacha-card-container {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .gacha-trophy-card {
+            background: linear-gradient(180deg, #38020a 0%, #160005 100%);
+            border: 4px solid var(--koka-yellow);
+            border-radius: 28px;
+            box-shadow: 0 0 60px var(--koka-red), inset 0 0 35px rgba(255, 209, 0, 0.4);
+            padding: 30px 25px;
+            text-align: center;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gacha-trophy-card::before {
+            content: "";
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent 0deg, rgba(255, 209, 0, 0.15) 20deg, transparent 40deg, rgba(211, 18, 42, 0.2) 60deg, transparent 80deg);
+            animation: rotateRays 12s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotateRays {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .card-inner-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .rank-badge-pill {
+            background: linear-gradient(135deg, var(--koka-yellow), #ff9900);
+            color: #000;
+            font-family: var(--font-anime);
+            font-weight: 900;
+            font-size: 1.4rem;
+            padding: 6px 28px;
+            border-radius: 50px;
+            border: 2px solid #fff;
+            letter-spacing: 2px;
+            box-shadow: 0 0 25px var(--koka-yellow);
+            text-transform: uppercase;
+        }
+
+        .ninja-avatar-stage {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 6px 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 209, 0, 0.2) 0%, rgba(211, 18, 42, 0.4) 70%, transparent 100%);
+            border: 3px solid var(--koka-yellow);
+            box-shadow: 0 0 35px rgba(255, 209, 0, 0.7), inset 0 0 20px rgba(211, 18, 42, 0.8);
+        }
+
+        .ninja-avatar-img {
+            max-width: 130px;
+            max-height: 130px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 12px var(--koka-yellow)) drop-shadow(0 6px 10px rgba(0,0,0,0.8));
+            transition: transform 0.3s ease;
+        }
+
+        .card-prize-label {
+            font-size: 1.1rem;
+            color: var(--neon-cyan);
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .card-prize-name {
+            font-size: 2.3rem;
+            font-weight: 900;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.15;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.9), 0 0 15px var(--koka-red);
+        }
+
+        .gacha-claim-btn {
+            margin-top: 20px;
+            background: linear-gradient(135deg, var(--koka-yellow), #ffaa00);
+            color: #000;
+            border: 3px solid #fff;
+            padding: 16px 44px;
+            font-size: 1.25rem;
+            font-family: var(--font-main);
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 0 35px var(--koka-yellow);
+            transition: all 0.2s ease;
+            border-radius: 16px;
+            z-index: 10;
+            letter-spacing: 1px;
+        }
+
+        .gacha-claim-btn:active, .gacha-claim-btn:focus {
+            transform: scale(0.96);
+            outline: none;
+        }
+
+        /* SOCIAL MEDIA FOLLOW GATE MODAL (WITH IG & TIKTOK QR CODES FOR TV) */
+        .social-gate-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(12, 1, 4, 0.97);
+            backdrop-filter: blur(12px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            transition: opacity 0.35s ease;
+        }
+
+        .social-gate-modal.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .social-card {
+            background: linear-gradient(180deg, #32020a 0%, #140004 100%);
+            border: 3px solid var(--koka-yellow);
+            box-shadow: 0 0 50px rgba(211, 18, 42, 0.85);
+            border-radius: 24px;
+            padding: 22px 24px;
+            max-width: 720px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .social-card h2 {
+            color: var(--koka-yellow);
+            font-size: 1.65rem;
+            font-weight: 900;
+            margin: 0 0 4px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 12px rgba(255, 209, 0, 0.6);
+        }
+
+        .social-card p {
+            color: #e0e0e0;
+            font-size: 0.88rem;
+            line-height: 1.35;
+            margin-bottom: 14px;
+        }
+
+        .follow-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .follow-section {
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(255, 209, 0, 0.25);
+            border-radius: 16px;
+            padding: 12px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .follow-title {
+            font-weight: 900;
+            font-size: 0.95rem;
+            color: #fff;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-tag {
+            background: var(--koka-red);
+            color: var(--koka-yellow);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 900;
+        }
+
+        .brand-tag.m5 {
+            background: #222;
+            color: var(--neon-cyan);
+            border: 1px solid var(--neon-cyan);
+        }
+
+        .qr-pair-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .qr-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .qr-box {
+            background: #fff;
+            padding: 5px;
+            border-radius: 10px;
+            width: 96px;
+            height: 96px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .qr-platform-tag {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--koka-yellow);
+            text-transform: uppercase;
+        }
+
+        .handle-label {
+            font-size: 0.72rem;
+            color: #ccc;
+            font-weight: 600;
+        }
+
+        .custom-checkbox-label {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .custom-checkbox-label input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--koka-red);
+        }
+
+        .start-gate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--koka-red), #b00);
+            color: var(--koka-yellow);
+            border: 2px solid var(--koka-yellow);
+            padding: 15px;
+            font-size: 1.18rem;
+            font-weight: 900;
+            border-radius: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(211, 18, 42, 0.6);
+        }
+
+        .start-gate-btn:disabled {
+            background: #23080c;
+            border-color: #451920;
+            color: #613239;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .gate-cancel-link {
+            display: inline-block;
+            margin-top: 8px;
+            color: #999;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-decoration: underline;
+            background: none;
+            border: none;
+        }
+
+        /* INVENTORY STOCK DRAWER */
+        .inventory-panel {
+            position: absolute;
+            bottom: 0; left: 50%;
+            transform: translateX(-50%) translateY(88%);
+            background: #140205;
+            padding: 12px 20px;
+            width: 90%;
+            max-width: 540px;
+            font-family: monospace;
+            font-size: 12px;
+            border-top: 3px solid var(--koka-yellow);
+            border-radius: 12px 12px 0 0;
+            transition: transform 0.3s ease;
+            z-index: 20;
+            opacity: 0.96;
+        }
+
+        .inventory-panel:hover, .inventory-panel.open {
+            transform: translateX(-50%) translateY(0%);
+        }
+
+        .inventory-header {
+            text-align: center;
+            color: var(--koka-yellow);
+            font-weight: bold;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .inventory-item {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.05);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .count {
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        /* =========================================================
+           OTIMIZAÇÃO AUTOMÁTICA PARA TV NA VERTICAL (PORTRAIT 9:16)
+           ========================================================= */
+        @media (orientation: portrait) {
+            .brand-header {
+                margin-top: 52px;
+                margin-bottom: 12px;
+            }
+
+            .brand-logo-img {
+                height: 50px;
+            }
+
+            .pachinko-cabinet {
+                width: 94vw;
+                height: 75vh;
+                max-height: 1400px;
+                padding: 14px;
+            }
+
+            canvas#pachinkoCanvas {
+                height: 84%;
+            }
+
+            .controls-area {
+                height: 16%;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .display-panel {
+                width: 100%;
+                height: 42%;
+                font-size: 1.05rem;
+            }
+
+            .action-btn {
+                width: 100%;
+                height: 58%;
+                font-size: 1.5rem;
+            }
+
+            .follow-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .qr-box {
+                width: 105px;
+                height: 105px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP KIOSK / ADMIN STATUS BAR -->
+    <div class="admin-top-bar">
+        <button id="kioskToggleBtn" class="kiosk-btn locked" onclick="openPinModal()">
+            <span id="kioskIcon">🔒</span>
+            <span id="kioskStatusText">MODO CABINE / ADMIN</span>
+        </button>
+    </div>
+
+    <!-- BRAND HEADER WITH PNG LOGO SLOTS -->
+    <div class="brand-header">
+        <div class="logo-container">
+            <img id="kokaLogoImg" class="brand-logo-img" src="Koka.png" alt="KOKA Logo" 
+                 onerror="this.style.display='none'; document.getElementById('kokaFallback').style.display='inline';">
+            <span id="kokaFallback" class="logo-fallback-text" style="display: none;">KOKA</span>
+
+            <span class="logo-divider">×</span>
+
+            <img id="m5LogoImg" class="brand-logo-img" src="5m.png" alt="5M Logo" 
+                 onerror="this.style.display='none'; document.getElementById('m5Fallback').style.display='inline';">
+            <span id="m5Fallback" class="logo-fallback-text" style="display: none; color: #00f0ff;">5M</span>
+        </div>
+        <div class="subtitle-tag">Pachinko Gacha • Lisboa Games Week</div>
+    </div>
+
+    <!-- PACHINKO CABINET CONTAINER -->
+    <div class="pachinko-cabinet">
+        <!-- CABINET LOCK OVERLAY BANNER -->
+        <div id="cabinetLockBanner" class="cabinet-lock-banner" onclick="openPinModal()">
+            <div class="lock-badge-icon">🔒</div>
+            <div class="lock-text-title">MÁQUINA BLOQUEADA</div>
+            <div class="lock-text-sub">TAPE OU USE O COMANDO PARA DESBLOQUEAR</div>
+        </div>
+
+        <canvas id="pachinkoCanvas"></canvas>
+
+        <div class="controls-area">
+            <div class="display-panel" id="displayOut">PRONTO PARA JOGAR</div>
+            <button class="action-btn" id="actionBtn" onclick="handleLaunchClick()">
+                <span>LANÇAR BOLA</span> 🎯
+            </button>
+        </div>
+    </div>
+
+    <!-- TOUCH-SCREEN & TV REMOTE KEYPAD MODAL (PIN: 8912) -->
+    <div class="pin-modal-overlay" id="pinModalOverlay">
+        <div class="pin-keypad-card">
+            <div class="pin-card-title" id="pinModalTitle">INTRODUZA O PIN</div>
+            <div class="pin-hint-sub" id="pinHintSub">Use o ecrã ou os números do comando da TV</div>
+            
+            <div class="pin-display-box">
+                <div class="pin-dot" id="dot0"></div>
+                <div class="pin-dot" id="dot1"></div>
+                <div class="pin-dot" id="dot2"></div>
+                <div class="pin-dot" id="dot3"></div>
+            </div>
+
+            <div class="keypad-grid" id="keypadGrid">
+                <button class="key-btn" onclick="pressKey('1')">1</button>
+                <button class="key-btn" onclick="pressKey('2')">2</button>
+                <button class="key-btn" onclick="pressKey('3')">3</button>
+                <button class="key-btn" onclick="pressKey('4')">4</button>
+                <button class="key-btn" onclick="pressKey('5')">5</button>
+                <button class="key-btn" onclick="pressKey('6')">6</button>
+                <button class="key-btn" onclick="pressKey('7')">7</button>
+                <button class="key-btn" onclick="pressKey('8')">8</button>
+                <button class="key-btn" onclick="pressKey('9')">9</button>
+                <button class="key-btn action-key cancel-key" onclick="closePinModal()">SAIR</button>
+                <button class="key-btn" onclick="pressKey('0')">0</button>
+                <button class="key-btn action-key clear-key" onclick="clearPin()">⌫</button>
+            </div>
+
+            <!-- UNLOCKED ADMIN QUICK CONTROLS -->
+            <div class="admin-options-container" id="adminOptionsContainer" style="display: none;">
+                <div class="admin-stock-editor" id="adminStockEditor"></div>
+                <button class="admin-opt-btn" onclick="toggleLockStateFromAdmin()">🔒 BLOQUEAR MÁQUINA</button>
+                <button class="admin-opt-btn" style="border-color: #ff0055; color: #ff0055; background: rgba(255, 0, 85, 0.15);" onclick="requestStockResetWithPin()">⚠️ REPOR STOCK INICIAL</button>
+                <button class="admin-opt-btn" style="border-color: #aaa; color: #aaa;" onclick="closePinModal()">FECHAR MENU</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GACHA VICTORY OVERLAY -->
+    <div class="gacha-overlay" id="gachaOverlay">
+        <canvas id="speedlinesCanvas"></canvas>
+        <div class="impact-flash" id="impactFlash"></div>
+
+        <div class="gacha-card-container">
+            <div class="gacha-trophy-card">
+                <div class="card-inner-content">
+                    <div class="rank-badge-pill" id="rankBadge">PARABÉNS! GANHASTE:</div>
+                    
+                    <div class="ninja-avatar-stage">
+                        <img id="ninjaImage" class="ninja-avatar-img" src="ninja.png" alt="Ninja Avatar" onerror="this.src='https://placehold.co/130x130/d3122a/ffd100?text=NINJA';">
+                    </div>
+
+                    <div class="card-prize-label" id="cardPrizeLabel">PRÉMIO DESBLOQUEADO!</div>
+                    <div class="card-prize-name" id="cardPrizeName">SACO DE PANO KOKA</div>
+                </div>
+            </div>
+
+            <button class="gacha-claim-btn" id="gachaClaimBtn">PRÓXIMO JOGADOR 🎯</button>
+        </div>
+    </div>
+
+    <!-- PRE-GAME SOCIAL MEDIA FOLLOW GATE (IG & TIKTOK QR CODES FOR TV) -->
+    <div class="social-gate-modal hidden" id="socialGateModal">
+        <div class="social-card">
+            <h2>Página de Confirmação</h2>
+            <p>Lê os QR Codes com o teu telemóvel e confirma que segues ambas as páginas para jogar:</p>
+
+            <div class="follow-grid">
+                <!-- KOKA PORTUGAL -->
+                <div class="follow-section">
+                    <div class="follow-title">
+                        <span>1. KOKA PORTUGAL</span>
+                        <span class="brand-tag">KOKA</span>
+                    </div>
+                    <div class="qr-pair-row">
+                        <div class="qr-item">
+                            <div class="qr-box">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.instagram.com/koka.portugal/" 
+                                     alt="QR IG Koka" 
+                                     onerror="this.parentElement.innerHTML='<span style=\'color:#000;font-weight:900;font-size:11px;\'>IG Koka</span>'">
+                            </div>
+                            <span class="qr-platform-tag">📷 Instagram</span>
+                            <span class="handle-label">@koka.portugal</span>
+                        </div>
+                        <div class="qr-item">
+                            <div class="qr-box">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.tiktok.com/@koka.portugal" 
+                                     alt="QR TikTok Koka" 
+                                     onerror="this.parentElement.innerHTML='<span style=\'color:#000;font-weight:900;font-size:11px;\'>TikTok Koka</span>'">
+                            </div>
+                            <span class="qr-platform-tag">🎵 TikTok</span>
+                            <span class="handle-label">@koka.portugal</span>
+                        </div>
+                    </div>
+                    <label class="custom-checkbox-label">
+                        <input type="checkbox" id="checkKoka" onchange="validateSocialGate()">
+                        <span>Já sigo a Koka Portugal</span>
+                    </label>
+                </div>
+
+                <!-- 5M ESPORTS -->
+                <div class="follow-section">
+                    <div class="follow-title">
+                        <span>2. 5M ESPORTS</span>
+                        <span class="brand-tag m5">5M</span>
+                    </div>
+                    <div class="qr-pair-row">
+                        <div class="qr-item">
+                            <div class="qr-box">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.instagram.com/5m_esportsl/" 
+                                     alt="QR IG 5M" 
+                                     onerror="this.parentElement.innerHTML='<span style=\'color:#000;font-weight:900;font-size:11px;\'>IG 5M</span>'">
+                            </div>
+                            <span class="qr-platform-tag">📷 Instagram</span>
+                            <span class="handle-label">@5m_esportsl</span>
+                        </div>
+                        <div class="qr-item">
+                            <div class="qr-box">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.tiktok.com/@5m_esports?lang=pt" 
+                                     alt="QR TikTok 5M" 
+                                     onerror="this.parentElement.innerHTML='<span style=\'color:#000;font-weight:900;font-size:11px;\'>TikTok 5M</span>'">
+                            </div>
+                            <span class="qr-platform-tag">🎵 TikTok</span>
+                            <span class="handle-label">@5m_esports</span>
+                        </div>
+                    </div>
+                    <label class="custom-checkbox-label">
+                        <input type="checkbox" id="check5M" onchange="validateSocialGate()">
+                        <span>Já sigo a 5M Esports</span>
+                    </label>
+                </div>
+            </div>
+
+            <button class="start-gate-btn" id="startGateBtn" disabled onclick="confirmGateAndLaunch()">CONFIRMAR E LANÇAR BOLA 🚀</button>
+            <button class="gate-cancel-link" onclick="socialGateModal.classList.add('hidden')">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- INVENTORY STOCK DRAWER -->
+    <div class="inventory-panel" id="inventoryPanel">
+        <div class="inventory-header" onclick="document.getElementById('inventoryPanel').classList.toggle('open')">📦 INVENTÁRIO DE PRÉMIOS LGW (CLIQUE PARA VER)</div>
+        <div class="inventory-grid" id="stockList"></div>
+    </div>
+
+    <script>
+        // --- OFFICIAL PRIZE STOCK (PREDEFINED VALUES) ---
+        const INITIAL_ITEMS = [
+            { id: 0, nome: "Saco de Pano Koka", label: "SACO", stock: 70, cor: "#ffd100" },
+            { id: 1, nome: "T-Shirt Koka", label: "T-SHIRT", stock: 110, cor: "#ff0055" },
+            { id: 2, nome: "Panamá Koka", label: "PANAMÁ", stock: 200, cor: "#00f0ff" },
+            { id: 3, nome: "Pauzinhos Koka", label: "PAUZINHOS", stock: 400, cor: "#00ff88" },
+            { id: 4, nome: "Prémio 5M", label: "PRÉMIO 5M", stock: Infinity, cor: "#c084fc" }
+        ];
+
+        const STORAGE_KEY = "koka_5m_pachinko_stock_lgw_v2";
+
+        function loadStockFromStorage() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    return parsed.map(item => ({
+                        ...item,
+                        stock: item.id === 4 ? Infinity : item.stock
+                    }));
+                }
+            } catch (e) {
+                console.error("Erro ao carregar stock:", e);
+            }
+            return INITIAL_ITEMS.map(item => ({ ...item }));
+        }
+
+        function saveStockToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(itens));
+            } catch (e) {
+                console.error("Erro ao guardar stock:", e);
+            }
+        }
+
+        let itens = loadStockFromStorage();
+
+        // --- KIOSK PIN SECURITY (PIN: 8912) ---
+        const CORRECT_PIN = "8912";
+        let isLocked = true;
+        let currentPin = "";
+        let pinActionMode = "UNLOCK";
+
+        // UI ELEMENTS
+        const kioskToggleBtn = document.getElementById('kioskToggleBtn');
+        const kioskIcon = document.getElementById('kioskIcon');
+        const kioskStatusText = document.getElementById('kioskStatusText');
+        const cabinetLockBanner = document.getElementById('cabinetLockBanner');
+        const pinModalOverlay = document.getElementById('pinModalOverlay');
+        const pinModalTitle = document.getElementById('pinModalTitle');
+        const pinHintSub = document.getElementById('pinHintSub');
+        const keypadGrid = document.getElementById('keypadGrid');
+        const adminOptionsContainer = document.getElementById('adminOptionsContainer');
+
+        function renderAdminStockEditor() {
+            const editor = document.getElementById('adminStockEditor');
+            if (!editor) return;
+            editor.innerHTML = '';
+            itens.forEach((item, index) => {
+                if (item.stock === Infinity) return;
+                editor.innerHTML += `
+                    <div class="admin-stock-row">
+                        <span>${item.nome}</span>
+                        <div class="admin-stock-controls">
+                            <button class="stock-step-btn" onclick="adjustSingleStock(${index}, -1)">-</button>
+                            <span class="stock-val-badge" id="adminVal_${index}">${item.stock}</span>
+                            <button class="stock-step-btn" onclick="adjustSingleStock(${index}, 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function adjustSingleStock(index, delta) {
+            if (itens[index].stock === Infinity) return;
+            itens[index].stock = Math.max(0, itens[index].stock + delta);
+            saveStockToStorage();
+            updateStockDisplay();
+            const badge = document.getElementById(`adminVal_${index}`);
+            if (badge) badge.innerText = itens[index].stock;
+            playPegSound(0.2);
+        }
+
+        function openPinModal() {
+            registerActivity();
+            currentPin = "";
+            pinActionMode = "UNLOCK";
+            updatePinDots();
+            if (!isLocked) {
+                pinModalTitle.innerText = "MENU ADMIN CABINE";
+                pinModalTitle.style.color = "var(--koka-yellow)";
+                pinHintSub.style.display = "none";
+                keypadGrid.style.display = "none";
+                document.querySelector('.pin-display-box').style.display = "none";
+                renderAdminStockEditor();
+                adminOptionsContainer.style.display = "flex";
+            } else {
+                pinModalTitle.innerText = "INTRODUZA O PIN";
+                pinModalTitle.style.color = "var(--koka-yellow)";
+                pinHintSub.style.display = "block";
+                keypadGrid.style.display = "grid";
+                document.querySelector('.pin-display-box').style.display = "flex";
+                adminOptionsContainer.style.display = "none";
+            }
+            pinModalOverlay.classList.add('active');
+        }
+
+        function requestStockResetWithPin() {
+            currentPin = "";
+            pinActionMode = "RESET_STOCK";
+            updatePinDots();
+            pinModalTitle.innerText = "CONFIRMAR RESET (PIN)";
+            pinModalTitle.style.color = "#ff0055";
+            pinHintSub.style.display = "block";
+            adminOptionsContainer.style.display = "none";
+            document.querySelector('.pin-display-box').style.display = "flex";
+            keypadGrid.style.display = "grid";
+        }
+
+        function executeStockReset() {
+            localStorage.removeItem(STORAGE_KEY);
+            itens = INITIAL_ITEMS.map(item => ({ ...item }));
+            saveStockToStorage();
+
+            slots.forEach((slot, index) => {
+                slot.item = itens[index];
+            });
+
+            updateStockDisplay();
+            playGachaVictoryFanfare();
+            pinModalTitle.innerText = "✅ STOCK REPOSTO!";
+            pinModalTitle.style.color = "#00ff88";
+
+            setTimeout(() => {
+                closePinModal();
+            }, 800);
+        }
+
+        function closePinModal() {
+            pinModalOverlay.classList.remove('active');
+            currentPin = "";
+            pinActionMode = "UNLOCK";
+        }
+
+        function pressKey(digit) {
+            registerActivity();
+            if (currentPin.length < 4) {
+                currentPin += digit;
+                updatePinDots();
+                playPegSound(0.2);
+                if (currentPin.length === 4) {
+                    setTimeout(verifyPin, 180);
+                }
+            }
+        }
+
+        function clearPin() {
+            registerActivity();
+            if (currentPin.length > 0) {
+                currentPin = currentPin.slice(0, -1);
+                updatePinDots();
+                playPegSound(0.1);
+            }
+        }
+
+        function updatePinDots() {
+            for (let i = 0; i < 4; i++) {
+                const dot = document.getElementById(`dot${i}`);
+                if (dot) {
+                    if (i < currentPin.length) {
+                        dot.classList.add('filled');
+                        dot.classList.remove('error');
+                    } else {
+                        dot.classList.remove('filled', 'error');
+                    }
+                }
+            }
+        }
+
+        function verifyPin() {
+            if (currentPin === CORRECT_PIN) {
+                if (pinActionMode === "RESET_STOCK") {
+                    executeStockReset();
+                } else {
+                    isLocked = false;
+                    updateKioskLockUI();
+                    playGachaVictoryFanfare();
+                    pinModalTitle.innerText = "ACESSO CONCEDIDO!";
+                    setTimeout(() => {
+                        openPinModal();
+                    }, 300);
+                }
+            } else {
+                for (let i = 0; i < 4; i++) {
+                    const dot = document.getElementById(`dot${i}`);
+                    if (dot) dot.classList.add('error');
+                }
+                playSmokeBombSound();
+                setTimeout(() => {
+                    currentPin = "";
+                    updatePinDots();
+                }, 600);
+            }
+        }
+
+        function toggleLockStateFromAdmin() {
+            isLocked = !isLocked;
+            updateKioskLockUI();
+            closePinModal();
+        }
+
+        function updateKioskLockUI() {
+            if (isLocked) {
+                kioskToggleBtn.className = "kiosk-btn locked";
+                kioskIcon.innerText = "🔒";
+                kioskStatusText.innerText = "MODO CABINE / BLOQUEADO";
+                cabinetLockBanner.classList.remove('hidden');
+            } else {
+                kioskToggleBtn.className = "kiosk-btn unlocked";
+                kioskIcon.innerText = "🔓";
+                kioskStatusText.innerText = "MODO ADMIN / DESBLOQUEADO";
+                cabinetLockBanner.classList.add('hidden');
+                if (ball.isGhost) {
+                    ball.active = false;
+                    ball.isGhost = false;
+                }
+            }
+        }
+
+        function resetNextPlayer() {
+            registerActivity();
+            document.getElementById('checkKoka').checked = false;
+            document.getElementById('check5M').checked = false;
+            validateSocialGate();
+            displayOut.innerText = "PRONTO PARA JOGAR";
+            displayOut.style.color = "#ffffff";
+            gachaOverlay.classList.remove('active');
+            isSpeedlinesAnimRunning = false;
+            socialGateModal.classList.add('hidden');
+            actionBtn.disabled = false;
+        }
+
+        // --- TV REMOTE & KEYBOARD SUPPORT ---
+        document.addEventListener('keydown', (e) => {
+            registerActivity();
+
+            if (pinModalOverlay.classList.contains('active')) {
+                if (e.key >= '0' && e.key <= '9') {
+                    e.preventDefault();
+                    pressKey(e.key);
+                } else if (e.key === 'Backspace' || e.key === 'Delete') {
+                    e.preventDefault();
+                    clearPin();
+                } else if (e.key === 'Escape') {
+                    e.preventDefault();
+                    closePinModal();
+                }
+                return;
+            }
+
+            if (gachaOverlay.classList.contains('active')) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    resetNextPlayer();
+                }
+                return;
+            }
+
+            if (!socialGateModal.classList.contains('hidden')) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const c1 = document.getElementById('checkKoka');
+                    const c2 = document.getElementById('check5M');
+                    if (!c1.checked) {
+                        c1.checked = true;
+                        validateSocialGate();
+                    } else if (!c2.checked) {
+                        c2.checked = true;
+                        validateSocialGate();
+                    } else {
+                        confirmGateAndLaunch();
+                    }
+                } else if (e.key === 'Escape') {
+                    socialGateModal.classList.add('hidden');
+                }
+                return;
+            }
+
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleLaunchClick();
+            }
+        });
+
+        // --- WEB AUDIO API SYNTHESIZER ---
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playPegSound(vol = 0.12) {
+            if (!audioCtx || ball.isGhost) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(700 + Math.random() * 500, audioCtx.currentTime);
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.04);
+            } catch (e) {}
+        }
+
+        function playLaunchSound() {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1100, audioCtx.currentTime + 0.18);
+                gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.18);
+            } catch (e) {}
+        }
+
+        function playGachaRevealSound() {
+            if (!audioCtx) return;
+            try {
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(1200, now + 0.35);
+
+                gain.gain.setValueAtTime(0.01, now);
+                gain.gain.linearRampToValueAtTime(0.3, now + 0.3);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.38);
+            } catch (e) {}
+        }
+
+        function playGachaImpactSound() {
+            if (!audioCtx) return;
+            try {
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(200, now);
+                osc.frequency.exponentialRampToValueAtTime(40, now + 0.3);
+
+                gain.gain.setValueAtTime(0.5, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.32);
+            } catch (e) {}
+        }
+
+        function playSmokeBombSound() {
+            if (!audioCtx) return;
+            try {
+                const bufferSize = audioCtx.sampleRate * 0.15;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                noise.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start();
+            } catch (e) {}
+        }
+
+        function playGachaVictoryFanfare() {
+            if (!audioCtx) return;
+            try {
+                const now = audioCtx.currentTime + 0.1;
+                const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                notes.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(freq, now + (idx * 0.08));
+                    gain.gain.setValueAtTime(0.18, now + (idx * 0.08));
+                    const dur = (idx === notes.length - 1) ? 0.7 : 0.12;
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + (idx * 0.08) + dur);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + (idx * 0.08));
+                    osc.stop(now + (idx * 0.08) + dur);
+                });
+            } catch (e) {}
+        }
+
+        // --- PACHINKO CANVAS & PHYSICS ENGINE (LANDSCAPE + PORTRAIT) ---
+        const canvas = document.getElementById('pachinkoCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let numSlots = 5;
+        let slotWidth = 100;
+        let pegs = [];
+        let slots = [];
+
+        function initBoardGeometry() {
+            canvas.width = canvas.clientWidth || 800;
+            canvas.height = canvas.clientHeight || 400;
+            
+            slotWidth = canvas.width / numSlots;
+            pegs = [];
+            slots = [];
+
+            const isPortrait = window.innerHeight > window.innerWidth;
+            const rows = isPortrait ? 12 : 8;
+            const startY = 40;
+            const rowSpacing = (canvas.height - 120) / rows;
+
+            for (let r = 0; r < rows; r++) {
+                const pegsInRow = isPortrait 
+                    ? (r % 2 === 0 ? 9 : 8) 
+                    : (r % 2 === 0 ? 13 : 12);
+                const marginX = r % 2 === 0 ? 30 : 50;
+                const spacingX = (canvas.width - marginX * 2) / (pegsInRow - 1);
+                const y = startY + r * rowSpacing;
+
+                for (let i = 0; i < pegsInRow; i++) {
+                    pegs.push({ x: marginX + i * spacingX, y: y, r: 4 });
+                }
+            }
+
+            for (let i = 0; i < numSlots; i++) {
+                slots.push({
+                    xStart: i * slotWidth,
+                    xEnd: (i + 1) * slotWidth,
+                    y: canvas.height - 50,
+                    item: itens[i]
+                });
+            }
+        }
+
+        window.addEventListener('resize', initBoardGeometry);
+
+        let ball = { x: 0, y: 0, vx: 0, vy: 0, r: 9, active: false, stuckTimer: 0, isGhost: false, targetIndex: 0 };
+        let selectedPrize = null;
+        const gravity = 0.24;
+        const bounce = 0.45;
+
+        // Attract Mode (Anti Burn-in)
+        let lastInteractionTime = Date.now();
+        function registerActivity() {
+            lastInteractionTime = Date.now();
+        }
+        ['click', 'touchstart', 'mousemove'].forEach(evt => {
+            window.addEventListener(evt, registerActivity, { passive: true });
+        });
+
+        setInterval(() => {
+            const idleSeconds = (Date.now() - lastInteractionTime) / 1000;
+            if (!ball.active && (isLocked || idleSeconds > 45)) {
+                launchGhostBall();
+            }
+        }, 5000);
+
+        function launchGhostBall() {
+            if (ball.active) return;
+            ball.x = Math.random() * (canvas.width - 60) + 30;
+            ball.y = 15;
+            ball.vx = (Math.random() * 2 - 1);
+            ball.vy = 1.2;
+            ball.active = true;
+            ball.stuckTimer = 0;
+            ball.isGhost = true;
+            ball.targetIndex = Math.floor(Math.random() * numSlots);
+        }
+
+        // Speedlines & Sparks Canvas
+        const speedlinesCanvas = document.getElementById('speedlinesCanvas');
+        const speedlinesCtx = speedlinesCanvas.getContext('2d');
+
+        function resizeSpeedlines() {
+            speedlinesCanvas.width = window.innerWidth;
+            speedlinesCanvas.height = window.innerHeight;
+        }
+        resizeSpeedlines();
+        window.addEventListener('resize', resizeSpeedlines);
+
+        let isSpeedlinesAnimRunning = false;
+        let speedlinesAngle = 0;
+        let sparks = [];
+
+        function renderAnimeSpeedlines() {
+            if (!isSpeedlinesAnimRunning) return;
+
+            const w = speedlinesCanvas.width;
+            const h = speedlinesCanvas.height;
+            const cx = w / 2;
+            const cy = h / 2;
+
+            speedlinesCtx.clearRect(0, 0, w, h);
+
+            const linesCount = 60;
+            speedlinesAngle += 0.015;
+
+            speedlinesCtx.save();
+            speedlinesCtx.translate(cx, cy);
+            speedlinesCtx.rotate(speedlinesAngle);
+
+            for (let i = 0; i < linesCount; i++) {
+                const angle = (i / linesCount) * Math.PI * 2;
+                const length = Math.max(w, h) * 1.2;
+                const thickness = Math.random() * 0.025 + 0.005;
+
+                speedlinesCtx.beginPath();
+                speedlinesCtx.moveTo(0, 0);
+                speedlinesCtx.arc(0, 0, length, angle, angle + thickness);
+                speedlinesCtx.fillStyle = (i % 2 === 0) ? 'rgba(255, 209, 0, 0.12)' : 'rgba(211, 18, 42, 0.15)';
+                speedlinesCtx.fill();
+            }
+            speedlinesCtx.restore();
+
+            sparks.forEach(s => {
+                s.x += s.vx;
+                s.y += s.vy;
+                s.alpha -= 0.02;
+                if (s.alpha > 0) {
+                    speedlinesCtx.beginPath();
+                    speedlinesCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    speedlinesCtx.fillStyle = s.color;
+                    speedlinesCtx.globalAlpha = Math.max(0, s.alpha);
+                    speedlinesCtx.fill();
+                }
+            });
+            speedlinesCtx.globalAlpha = 1.0;
+
+            requestAnimationFrame(renderAnimeSpeedlines);
+        }
+
+        function triggerGachaVictory(prize) {
+            const impactFlash = document.getElementById('impactFlash');
+            const rankBadge = document.getElementById('rankBadge');
+            const cardPrizeLabel = document.getElementById('cardPrizeLabel');
+            const cardPrizeName = document.getElementById('cardPrizeName');
+            const gachaOverlay = document.getElementById('gachaOverlay');
+
+            impactFlash.classList.remove('flash-now');
+            sparks = [];
+
+            rankBadge.innerText = "PARABÉNS! GANHASTE:";
+            rankBadge.style.background = "linear-gradient(135deg, var(--koka-yellow), #ff9900)";
+            cardPrizeLabel.innerText = "PRÉMIO DESBLOQUEADO!";
+            cardPrizeName.innerText = prize.nome;
+            cardPrizeName.style.textShadow = `0 0 30px ${prize.cor}, 0 0 15px #ffffff`;
+
+            playGachaRevealSound();
+
+            gachaOverlay.classList.add('active');
+            isSpeedlinesAnimRunning = true;
+            renderAnimeSpeedlines();
+
+            setTimeout(() => {
+                impactFlash.classList.add('flash-now');
+                playGachaImpactSound();
+
+                for (let i = 0; i < 50; i++) {
+                    sparks.push({
+                        x: speedlinesCanvas.width / 2,
+                        y: speedlinesCanvas.height / 2,
+                        vx: (Math.random() - 0.5) * 20,
+                        vy: (Math.random() - 0.5) * 20,
+                        r: Math.random() * 4 + 2,
+                        color: Math.random() > 0.4 ? '#ffd100' : '#00f0ff',
+                        alpha: 1.0
+                    });
+                }
+
+                playGachaVictoryFanfare();
+            }, 250);
+        }
+
+        // SOCIAL MEDIA GATE & LAUNCH LOGIC
+        const socialGateModal = document.getElementById('socialGateModal');
+        const startGateBtn = document.getElementById('startGateBtn');
+        const actionBtn = document.getElementById('actionBtn');
+        const displayOut = document.getElementById('displayOut');
+
+        function handleLaunchClick() {
+            registerActivity();
+            if (isLocked) {
+                openPinModal();
+                return;
+            }
+            if (ball.active && !ball.isGhost) return;
+            openSocialGate();
+        }
+
+        function openSocialGate() {
+            socialGateModal.classList.remove('hidden');
+        }
+
+        function validateSocialGate() {
+            const koka = document.getElementById('checkKoka').checked;
+            const m5 = document.getElementById('check5M').checked;
+            startGateBtn.disabled = !(koka && m5);
+        }
+
+        function confirmGateAndLaunch() {
+            socialGateModal.classList.add('hidden');
+            dropBall();
+        }
+
+        function updateStockDisplay() {
+            const stockList = document.getElementById('stockList');
+            if (!stockList) return;
+            stockList.innerHTML = '';
+            itens.forEach(i => {
+                const isUnlimited = i.stock === Infinity;
+                const stockText = isUnlimited ? '∞' : (i.stock <= 0 ? 'ESGOTADO' : i.stock + ' un');
+                const colorStyle = (!isUnlimited && i.stock <= 0) ? 'color:#ff0055;' : '';
+                stockList.innerHTML += `
+                    <div class="inventory-item">
+                        <span>> ${i.nome}:</span>
+                        <span class="count" style="${colorStyle}">${stockText}</span>
+                    </div>`;
+            });
+        }
+
+        function dropBall() {
+            if (ball.active && !ball.isGhost) return;
+            initAudio();
+
+            const validItens = itens.filter(i => i.stock > 0);
+            if (validItens.length === 0) {
+                displayOut.innerText = "SEM STOCK DISPONÍVEL";
+                return;
+            }
+
+            playLaunchSound();
+
+            selectedPrize = validItens[Math.floor(Math.random() * validItens.length)];
+            const targetIndex = itens.findIndex(i => i.id === selectedPrize.id);
+            const targetX = (targetIndex * slotWidth) + (slotWidth / 2);
+            
+            ball.x = targetX + (Math.random() * 80 - 40); 
+            if (ball.x < 25) ball.x = 25;
+            if (ball.x > canvas.width - 25) ball.x = canvas.width - 25;
+            
+            ball.y = 15;
+            ball.vx = (Math.random() * 2 - 1);
+            ball.vy = 1.2;
+            ball.active = true;
+            ball.isGhost = false;
+            ball.targetIndex = targetIndex;
+            ball.stuckTimer = 0;
+
+            actionBtn.disabled = true;
+            displayOut.innerText = "BOLA EM MOVIMENTO...";
+            displayOut.style.color = "var(--koka-yellow)";
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Glowing Pegs
+            pegs.forEach(peg => {
+                ctx.beginPath();
+                ctx.arc(peg.x, peg.y, peg.r, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffd100';
+                ctx.shadowBlur = 6;
+                ctx.shadowColor = '#ffd100';
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            });
+
+            // Draw Slot Dividers
+            for (let i = 1; i < numSlots; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * slotWidth, canvas.height - 65);
+                ctx.lineTo(i * slotWidth, canvas.height);
+                ctx.strokeStyle = 'rgba(255, 209, 0, 0.4)';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            }
+
+            // Draw Bottom Slot Labels
+            slots.forEach((slot) => {
+                const isOut = slot.item.stock <= 0;
+                ctx.fillStyle = isOut ? 'rgba(255, 0, 85, 0.08)' : 'rgba(255,255,255,0.05)';
+                ctx.fillRect(slot.xStart + 3, canvas.height - 50, slotWidth - 6, 46);
+                
+                ctx.fillStyle = isOut ? '#666666' : slot.item.cor;
+                ctx.font = "bold 14px 'Outfit', sans-serif";
+                ctx.textAlign = "center";
+                const textToShow = isOut ? "ESGOTADO" : slot.item.label;
+                ctx.fillText(textToShow, slot.xStart + slotWidth / 2, canvas.height - 20);
+            });
+
+            // Physics for active ball
+            if (ball.active) {
+                ball.vy += gravity;
+
+                if (!ball.isGhost && ball.y > canvas.height * 0.55) {
+                    const currentCol = Math.min(Math.max(Math.floor(ball.x / slotWidth), 0), numSlots - 1);
+                    if (itens[currentCol].stock <= 0 || ball.y > canvas.height * 0.72) {
+                        const targetCenterX = (ball.targetIndex * slotWidth) + (slotWidth / 2);
+                        const diffX = targetCenterX - ball.x;
+                        ball.vx += diffX * 0.0022;
+                    }
+                }
+
+                ball.x += ball.vx;
+                ball.y += ball.vy;
+
+                if (Math.abs(ball.vx) < 0.1 && Math.abs(ball.vy) < 0.5) {
+                    ball.stuckTimer++;
+                    if (ball.stuckTimer > 120) {
+                        ball.vx = (Math.random() - 0.5) * 4;
+                        ball.vy = 2;
+                        ball.stuckTimer = 0;
+                    }
+                } else {
+                    ball.stuckTimer = 0;
+                }
+
+                // Wall collisions
+                if (ball.x - ball.r < 0) { 
+                    ball.x = ball.r; 
+                    ball.vx *= -bounce; 
+                    playPegSound(0.08); 
+                }
+                if (ball.x + ball.r > canvas.width) { 
+                    ball.x = canvas.width - ball.r; 
+                    ball.vx *= -bounce; 
+                    playPegSound(0.08); 
+                }
+
+                // Peg collisions
+                pegs.forEach(peg => {
+                    let dx = ball.x - peg.x;
+                    let dy = ball.y - peg.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < ball.r + peg.r) {
+                        let overlap = (ball.r + peg.r) - dist;
+                        ball.x += (dx / (dist || 1)) * overlap;
+                        ball.y += (dy / (dist || 1)) * overlap;
+                        let nx = dx / (dist || 1);
+                        let ny = dy / (dist || 1);
+                        let dotProduct = ball.vx * nx + ball.vy * ny;
+                        ball.vx = (ball.vx - 2 * dotProduct * nx) * bounce + (Math.random() * 0.6 - 0.3);
+                        ball.vy = (ball.vy - 2 * dotProduct * ny) * bounce;
+                        playPegSound(0.15);
+                    }
+                });
+
+                // Landing in bottom slots
+                if (ball.y >= canvas.height - 50) {
+                    ball.active = false;
+
+                    if (ball.isGhost) {
+                        ball.isGhost = false;
+                        requestAnimationFrame(gameLoop);
+                        return;
+                    }
+
+                    let finalIndex = Math.min(Math.max(Math.floor(ball.x / slotWidth), 0), numSlots - 1);
+                    if (itens[finalIndex].stock <= 0) {
+                        finalIndex = ball.targetIndex;
+                    }
+                    const finalPrize = itens[finalIndex];
+
+                    setTimeout(() => {
+                        if (finalPrize.stock !== Infinity && finalPrize.stock > 0) {
+                            finalPrize.stock--;
+                            saveStockToStorage();
+                        }
+                        displayOut.innerText = `GANHASTE: ${finalPrize.nome.toUpperCase()}`;
+                        updateStockDisplay();
+                        triggerGachaVictory(finalPrize);
+                    }, 300);
+                }
+
+                // Render Pachinko Ball
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = ball.isGhost ? "rgba(255, 209, 0, 0.5)" : "#ffffff";
+                ctx.beginPath();
+                ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+                ctx.fillStyle = ball.isGhost ? "rgba(255, 255, 255, 0.45)" : "#ffffff";
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        document.getElementById('gachaClaimBtn').addEventListener('click', () => {
+            resetNextPlayer();
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initBoardGeometry();
+            updateKioskLockUI();
+            updateStockDisplay();
+            gameLoop();
+        });
+    </script>
+</body>
+</html>
