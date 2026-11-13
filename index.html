@@ -4,14 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Koka Noodles × 5M - Pachinko LGW</title>
+
+    <!-- ÍCONE / THUMBNAIL AO AFIXAR NO ECRÃ INICIAL -->
+    <link rel="icon" type="image/png" href="Koka.png">
+    <link rel="shortcut icon" type="image/png" href="Koka.png">
+    <link rel="apple-touch-icon" href="Koka.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Koka Pachinko">
+    <meta name="theme-color" content="#2b0007">
+
     <style>
         :root {
             --koka-red: #d3122a;
-            --koka-red-dark: #800010;
-            --koka-red-deep: #120205;
+            --koka-red-deep: #140205;
             --koka-yellow: #ffd100;
             --neon-cyan: #00f0ff;
-            --font-main: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+            --font-main: Arial, Helvetica, sans-serif;
         }
 
         * {
@@ -23,17 +32,16 @@
 
         body {
             font-family: var(--font-main);
-            background: radial-gradient(circle at center, #70000e 0%, #1a0004 100%);
-            background-color: var(--koka-red-deep);
+            background-color: #2b0007;
             color: #fff;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            height: 100vh;
             width: 100vw;
             margin: 0;
-            padding: 10px;
+            padding: 8px;
             overflow: hidden;
             position: relative;
         }
@@ -41,9 +49,9 @@
         /* TOP KIOSK / ADMIN STATUS BAR */
         .admin-top-bar {
             position: fixed;
-            top: 10px;
-            left: 10px;
-            right: 10px;
+            top: 8px;
+            left: 8px;
+            right: 8px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -68,7 +76,6 @@
             align-items: center;
             gap: 8px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .kiosk-btn.locked {
@@ -86,8 +93,8 @@
         /* BRAND HEADER */
         .brand-header {
             text-align: center;
-            margin-top: 35px;
-            margin-bottom: 8px;
+            margin-top: 32px;
+            margin-bottom: 6px;
             z-index: 2;
             display: flex;
             flex-direction: column;
@@ -101,13 +108,13 @@
             justify-content: center;
             gap: 16px;
             background: #140003;
-            padding: 8px 24px;
+            padding: 6px 22px;
             border-radius: 50px;
             border: 2px solid var(--koka-yellow);
         }
 
         .brand-logo-img {
-            height: 42px;
+            height: 40px;
             max-width: 140px;
             object-fit: contain;
         }
@@ -115,24 +122,23 @@
         .logo-fallback-text {
             color: var(--koka-yellow);
             font-weight: 900;
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             letter-spacing: 2px;
             text-transform: uppercase;
         }
 
         .logo-divider {
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             color: var(--koka-yellow);
             font-weight: 900;
         }
 
         .subtitle-tag {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--koka-yellow);
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             text-transform: uppercase;
             font-weight: 900;
-            margin-top: 2px;
         }
 
         /* PACHINKO CABINET CONTAINER */
@@ -140,11 +146,11 @@
             position: relative;
             width: 92vw;
             max-width: 900px;
-            height: 62vh;
-            max-height: 550px;
+            height: 64vh;
+            max-height: 560px;
             background: #140205;
-            border: 5px solid var(--koka-yellow);
-            border-radius: 20px;
+            border: 4px solid var(--koka-yellow);
+            border-radius: 18px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -152,52 +158,193 @@
             padding: 10px;
         }
 
-        /* LOCKED OVERLAY (SEM BLUR PESADO) */
+        /* LOCKED OVERLAY */
         .cabinet-lock-banner {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 0, 3, 0.92);
+            background: rgba(18, 0, 3, 0.78);
             z-index: 30;
-            border-radius: 15px;
+            border-radius: 14px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 12px;
             cursor: pointer;
+            padding: 20px;
         }
 
         .cabinet-lock-banner.hidden {
-            display: none;
+            display: none !important;
         }
 
         .lock-badge-icon {
             font-size: 3.5rem;
+            animation: pulseBadge 1.8s infinite ease-in-out;
+        }
+
+        @keyframes pulseBadge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.12); }
         }
 
         .lock-text-title {
             color: #ffffff;
-            font-size: 1.4rem;
+            font-size: 1.45rem;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 2px;
             text-align: center;
+            background: rgba(0, 0, 0, 0.75);
+            padding: 8px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .lock-text-sub {
             color: var(--koka-yellow);
             font-size: 0.9rem;
             font-weight: 700;
-            background: #000;
-            padding: 6px 16px;
+            background: #28000a;
+            padding: 8px 18px;
             border-radius: 20px;
             border: 1px solid var(--koka-yellow);
+            text-align: center;
+        }
+
+        /* MODO SUSPENSÃO / ATTRACT MODE (10 SEGUNDOS) */
+        .attract-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(14, 0, 3, 0.88);
+            z-index: 5000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 64px 20px 36px 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .attract-overlay.active {
+            display: flex;
+        }
+
+        .attract-top-banner {
+            background: var(--koka-red);
+            border: 3px solid var(--koka-yellow);
+            border-radius: 20px;
+            padding: 14px 26px;
+            max-width: 680px;
+            width: 94%;
+            animation: attractPulse 1.6s infinite ease-in-out;
+        }
+
+        @keyframes attractPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+
+        .attract-kicker {
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .attract-headline {
+            color: var(--koka-yellow);
+            font-size: 2.1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 1.1;
+            margin: 0;
+        }
+
+        .attract-showcase-card {
+            background: linear-gradient(180deg, #36020a 0%, #140003 100%);
+            border: 4px solid var(--koka-yellow);
+            border-radius: 26px;
+            padding: 24px 20px;
+            width: 92%;
+            max-width: 520px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .attract-prize-tag {
+            background: #22040a;
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            font-size: 0.85rem;
+            font-weight: 900;
+            padding: 4px 16px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .attract-ninja-wrap {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #1f0106;
+            border: 3px solid var(--koka-yellow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: ninjaJump 1.1s infinite ease-in-out;
+        }
+
+        .attract-ninja-wrap img {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: contain;
+        }
+
+        .attract-prize-title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ffffff;
+            text-transform: uppercase;
+            line-height: 1.15;
+            transition: color 0.25s ease;
+        }
+
+        .attract-stock-pill {
+            background: rgba(0, 255, 136, 0.14);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            font-size: 0.95rem;
+            font-weight: 800;
+            padding: 5px 18px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        .attract-cta-footer {
+            background: var(--koka-yellow);
+            color: #000000;
+            font-size: 1.35rem;
+            font-weight: 900;
+            padding: 16px 36px;
+            border-radius: 50px;
+            border: 3px solid #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: attractPulse 1.2s infinite ease-in-out;
         }
 
         canvas#pachinkoCanvas {
             background: #180004;
-            border-radius: 12px;
-            border: 2px solid rgba(255, 209, 0, 0.4);
+            border-radius: 10px;
+            border: 2px solid #665200;
             width: 100%;
             height: 80%;
             display: block;
@@ -224,7 +371,6 @@
             font-weight: 800;
             color: #fff;
             text-transform: uppercase;
-            letter-spacing: 1px;
             border-radius: 10px;
             height: 100%;
             display: flex;
@@ -235,7 +381,7 @@
         .action-btn {
             min-width: 220px;
             height: 100%;
-            background: linear-gradient(135deg, var(--koka-red), #ff1a3c);
+            background: var(--koka-red);
             color: var(--koka-yellow);
             border-radius: 12px;
             border: 3px solid var(--koka-yellow);
@@ -244,11 +390,15 @@
             font-size: 1.25rem;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 1px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            transition: transform 0.12s ease;
+        }
+
+        .action-btn:active:not(:disabled) {
+            transform: scale(0.95);
         }
 
         .action-btn:disabled {
@@ -258,12 +408,12 @@
             cursor: not-allowed;
         }
 
-        /* PIN MODAL (SEM BLUR) */
+        /* PIN MODAL */
         .pin-modal-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background: rgba(8, 0, 3, 0.96);
+            background: #0d0003;
             z-index: 20000;
             display: none;
             align-items: center;
@@ -277,37 +427,36 @@
         .pin-keypad-card {
             background: #1c0105;
             border: 3px solid var(--koka-yellow);
-            border-radius: 24px;
-            padding: 24px;
+            border-radius: 20px;
+            padding: 18px;
             width: 92%;
-            max-width: 440px;
+            max-width: 460px;
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 14px;
+            gap: 10px;
         }
 
         .pin-card-title {
             color: var(--koka-yellow);
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
             margin: 0;
         }
 
         .pin-hint-sub {
             font-size: 0.78rem;
             color: #aaa;
-            margin-top: -8px;
+            margin-top: -4px;
         }
 
         .pin-display-box {
             display: flex;
             gap: 12px;
             justify-content: center;
-            margin: 6px 0;
+            margin: 4px 0;
         }
 
         .pin-dot {
@@ -330,18 +479,18 @@
         .keypad-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            gap: 10px;
             width: 100%;
         }
 
         .key-btn {
             background: #2b070d;
-            border: 2px solid rgba(255, 209, 0, 0.4);
+            border: 2px solid #806800;
             color: #ffffff;
             font-size: 1.6rem;
             font-weight: 900;
-            height: 58px;
-            border-radius: 16px;
+            height: 54px;
+            border-radius: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -374,28 +523,35 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-top: 4px;
+            gap: 8px;
+            margin-top: 2px;
         }
 
         .admin-stock-editor {
             background: #110002;
-            border: 1px solid rgba(255, 209, 0, 0.3);
+            border: 1px solid #665200;
             border-radius: 12px;
-            padding: 10px;
+            padding: 8px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             text-align: left;
+        }
+
+        .admin-stock-hint {
+            font-size: 0.72rem;
+            color: #bbb;
+            text-align: center;
+            margin-bottom: 2px;
         }
 
         .admin-stock-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 0.85rem;
+            font-size: 0.86rem;
             font-weight: 700;
-            padding: 4px 6px;
+            padding: 5px 8px;
             background: #220409;
             border-radius: 8px;
         }
@@ -403,48 +559,62 @@
         .admin-stock-controls {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .stock-step-btn {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 8px;
-            border: 1px solid var(--koka-yellow);
+            border: 2px solid var(--koka-yellow);
             background: #331900;
             color: var(--koka-yellow);
             font-weight: 900;
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stock-step-btn:active {
+            background: var(--koka-yellow);
+            color: #000;
         }
 
         .stock-val-badge {
-            min-width: 38px;
+            min-width: 44px;
             text-align: center;
             color: #00ff88;
             font-family: monospace;
-            font-size: 0.95rem;
+            font-size: 1.05rem;
+            font-weight: 900;
+        }
+
+        .admin-btn-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
         }
 
         .admin-opt-btn {
             background: #2d1b00;
             border: 1px solid var(--koka-yellow);
             color: var(--koka-yellow);
-            padding: 12px;
+            padding: 11px 8px;
             border-radius: 12px;
             font-weight: 800;
-            font-size: 0.9rem;
+            font-size: 0.84rem;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        /* GACHA VICTORY OVERLAY (LEVE E RÁPIDO) */
+        /* GACHA VICTORY OVERLAY */
         .gacha-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background: rgba(10, 0, 3, 0.96);
+            background: radial-gradient(circle at center, #590310 0%, #0d0003 100%);
             z-index: 9999;
             display: none;
             flex-direction: column;
@@ -457,6 +627,81 @@
             display: flex;
         }
 
+        .victory-flash {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #ffffff;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 20;
+        }
+
+        .gacha-overlay.active .victory-flash {
+            animation: flashReveal 0.45s ease-out forwards;
+        }
+
+        @keyframes flashReveal {
+            0% { opacity: 0.85; }
+            100% { opacity: 0; }
+        }
+
+        .sunburst-rays {
+            position: absolute;
+            width: 160vmax;
+            height: 160vmax;
+            background: repeating-conic-gradient(
+                from 0deg,
+                rgba(255, 209, 0, 0.14) 0deg 10deg,
+                transparent 10deg 20deg
+            );
+            animation: spinRays 18s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes spinRays {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .confetti-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            top: -20px;
+            width: 12px;
+            height: 20px;
+            border-radius: 3px;
+            animation: confettiFall linear infinite;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(105vh) rotate(540deg); opacity: 0.3; }
+        }
+
+        @keyframes popCardIn {
+            0% { transform: scale(0.35) rotate(-4deg); opacity: 0; }
+            65% { transform: scale(1.08) rotate(1deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes ninjaJump {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-14px) scale(1.06); }
+        }
+
+        @keyframes prizeGlowPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
         .gacha-card-container {
             position: relative;
             z-index: 5;
@@ -466,13 +711,15 @@
             justify-content: center;
             max-width: 650px;
             width: 90%;
+            animation: popCardIn 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
         .gacha-trophy-card {
-            background: linear-gradient(180deg, #38020a 0%, #160005 100%);
-            border: 4px solid var(--koka-yellow);
-            border-radius: 28px;
-            padding: 30px 25px;
+            background: linear-gradient(180deg, #3b020b 0%, #170004 100%);
+            border: 5px solid var(--koka-yellow);
+            box-shadow: 0 0 40px rgba(255, 209, 0, 0.55);
+            border-radius: 26px;
+            padding: 30px 22px;
             text-align: center;
             width: 100%;
         }
@@ -485,65 +732,66 @@
         }
 
         .rank-badge-pill {
-            background: linear-gradient(135deg, var(--koka-yellow), #ff9900);
+            background: linear-gradient(90deg, #ffd100, #ffaa00, #ffd100);
             color: #000;
             font-weight: 900;
             font-size: 1.4rem;
-            padding: 6px 28px;
+            padding: 7px 28px;
             border-radius: 50px;
             border: 2px solid #fff;
-            letter-spacing: 2px;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .ninja-avatar-stage {
-            width: 150px;
-            height: 150px;
+            width: 155px;
+            height: 155px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 6px 0;
+            margin: 8px 0;
             border-radius: 50%;
-            background: #2b0309;
-            border: 3px solid var(--koka-yellow);
+            background: radial-gradient(circle, #4a0612 0%, #1a0004 100%);
+            border: 4px solid var(--koka-yellow);
+            animation: ninjaJump 1.1s infinite ease-in-out;
         }
 
         .ninja-avatar-img {
-            max-width: 130px;
-            max-height: 130px;
+            max-width: 132px;
+            max-height: 132px;
             object-fit: contain;
         }
 
         .card-prize-label {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             color: var(--neon-cyan);
             font-weight: 800;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             text-transform: uppercase;
         }
 
         .card-prize-name {
-            font-size: 2.3rem;
+            font-size: 2.35rem;
             font-weight: 900;
             color: #ffffff;
             text-transform: uppercase;
-            letter-spacing: 1px;
             line-height: 1.15;
+            animation: prizeGlowPulse 1.5s infinite ease-in-out;
         }
 
         .gacha-claim-btn {
-            margin-top: 20px;
-            background: linear-gradient(135deg, var(--koka-yellow), #ffaa00);
+            margin-top: 22px;
+            background: var(--koka-yellow);
             color: #000;
             border: 3px solid #fff;
-            padding: 16px 44px;
+            padding: 16px 46px;
             font-size: 1.25rem;
-            font-family: var(--font-main);
+            font-family: inherit;
             font-weight: 900;
             text-transform: uppercase;
             cursor: pointer;
             border-radius: 16px;
-            letter-spacing: 1px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.6);
         }
 
         /* SOCIAL MEDIA FOLLOW GATE MODAL */
@@ -551,7 +799,7 @@
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background: rgba(12, 1, 4, 0.97);
+            background: #0d0003;
             z-index: 10000;
             display: flex;
             align-items: center;
@@ -566,8 +814,8 @@
         .social-card {
             background: #1f0106;
             border: 3px solid var(--koka-yellow);
-            border-radius: 24px;
-            padding: 22px 24px;
+            border-radius: 22px;
+            padding: 20px 22px;
             max-width: 720px;
             width: 100%;
             text-align: center;
@@ -575,38 +823,37 @@
 
         .social-card h2 {
             color: var(--koka-yellow);
-            font-size: 1.65rem;
+            font-size: 1.6rem;
             font-weight: 900;
             margin: 0 0 4px 0;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .social-card p {
             color: #e0e0e0;
             font-size: 0.88rem;
             line-height: 1.35;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .follow-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-bottom: 14px;
+            gap: 12px;
+            margin-bottom: 12px;
         }
 
         .follow-section {
             background: #120003;
-            border: 1px solid rgba(255, 209, 0, 0.3);
-            border-radius: 16px;
-            padding: 12px;
+            border: 1px solid #665200;
+            border-radius: 14px;
+            padding: 10px;
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
+            gap: 8px;
         }
 
         .follow-title {
@@ -636,7 +883,7 @@
 
         .qr-pair-row {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             justify-content: center;
             width: 100%;
         }
@@ -650,10 +897,10 @@
 
         .qr-box {
             background: #fff;
-            padding: 5px;
-            border-radius: 10px;
-            width: 96px;
-            height: 96px;
+            padding: 4px;
+            border-radius: 8px;
+            width: 92px;
+            height: 92px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -684,34 +931,33 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             color: #fff;
             font-weight: 700;
             cursor: pointer;
             background: #24040a;
             padding: 8px 10px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid #4d1922;
         }
 
         .custom-checkbox-label input[type="checkbox"] {
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             accent-color: var(--koka-red);
         }
 
         .start-gate-btn {
             width: 100%;
-            background: linear-gradient(135deg, var(--koka-red), #b00);
+            background: var(--koka-red);
             color: var(--koka-yellow);
             border: 2px solid var(--koka-yellow);
-            padding: 15px;
-            font-size: 1.18rem;
+            padding: 14px;
+            font-size: 1.15rem;
             font-weight: 900;
             border-radius: 12px;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .start-gate-btn:disabled {
@@ -725,7 +971,7 @@
             display: inline-block;
             margin-top: 8px;
             color: #999;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             cursor: pointer;
             text-decoration: underline;
             background: none;
@@ -779,22 +1025,22 @@
             font-weight: bold;
         }
 
-        /* OTIMIZAÇÃO AUTOMÁTICA PARA TV NA VERTICAL (PORTRAIT 9:16) */
+        /* OTIMIZAÇÃO PARA TV NA VERTICAL (PORTRAIT 9:16) */
         @media (orientation: portrait) {
             .brand-header {
-                margin-top: 52px;
-                margin-bottom: 12px;
+                margin-top: 50px;
+                margin-bottom: 10px;
             }
 
             .brand-logo-img {
-                height: 50px;
+                height: 48px;
             }
 
             .pachinko-cabinet {
                 width: 94vw;
                 height: 75vh;
                 max-height: 1400px;
-                padding: 14px;
+                padding: 12px;
             }
 
             canvas#pachinkoCanvas {
@@ -804,7 +1050,7 @@
             .controls-area {
                 height: 16%;
                 flex-direction: column;
-                gap: 10px;
+                gap: 8px;
             }
 
             .display-panel {
@@ -816,7 +1062,7 @@
             .action-btn {
                 width: 100%;
                 height: 58%;
-                font-size: 1.5rem;
+                font-size: 1.45rem;
             }
 
             .follow-grid {
@@ -824,23 +1070,25 @@
             }
 
             .qr-box {
-                width: 105px;
-                height: 105px;
+                width: 100px;
+                height: 100px;
+            }
+
+            .attract-headline {
+                font-size: 2.3rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- TOP KIOSK / ADMIN STATUS BAR -->
     <div class="admin-top-bar">
-        <button id="kioskToggleBtn" class="kiosk-btn locked" onclick="openPinModal()">
+        <button id="kioskToggleBtn" class="kiosk-btn locked" onclick="openAdminOrPin()">
             <span id="kioskIcon">🔒</span>
-            <span id="kioskStatusText">MODO CABINE / ADMIN</span>
+            <span id="kioskStatusText">MODO CABINE / BLOQUEADO</span>
         </button>
     </div>
 
-    <!-- BRAND HEADER -->
     <div class="brand-header">
         <div class="logo-container">
             <img id="kokaLogoImg" class="brand-logo-img" src="Koka.png" alt="KOKA Logo" 
@@ -856,12 +1104,11 @@
         <div class="subtitle-tag">Pachinko Gacha • Lisboa Games Week</div>
     </div>
 
-    <!-- PACHINKO CABINET CONTAINER -->
     <div class="pachinko-cabinet">
-        <div id="cabinetLockBanner" class="cabinet-lock-banner" onclick="openPinModal()">
-            <div class="lock-badge-icon">🔒</div>
-            <div class="lock-text-title">MÁQUINA BLOQUEADA</div>
-            <div class="lock-text-sub">TAPE OU USE O COMANDO PARA DESBLOQUEAR</div>
+        <div id="cabinetLockBanner" class="cabinet-lock-banner" onclick="openPinEntry()">
+            <div class="lock-badge-icon" id="lockIconMain">🔒</div>
+            <div class="lock-text-title" id="lockTitleMain">MÁQUINA BLOQUEADA</div>
+            <div class="lock-text-sub" id="lockSubMain">TAPE OU USE O COMANDO PARA DESBLOQUEAR</div>
         </div>
 
         <canvas id="pachinkoCanvas"></canvas>
@@ -874,13 +1121,36 @@
         </div>
     </div>
 
+    <!-- MODO SUSPENSÃO / ATTRACT MODE (10 SEGUNDOS) - VITRINE DE PRÉMIOS -->
+    <div class="attract-overlay" id="attractOverlay" onclick="exitAttractMode()">
+        <div class="sunburst-rays"></div>
+        
+        <div class="attract-top-banner" style="position: relative; z-index: 3;">
+            <div class="attract-kicker">KOKA NOODLES × 5M ESPORTS</div>
+            <h2 class="attract-headline">JOGA GRÁTIS E GANHA PRÉMIOS OFICIAIS!</h2>
+        </div>
+
+        <div class="attract-showcase-card" style="position: relative; z-index: 3;">
+            <div class="attract-prize-tag">🎁 PRÉMIOS EM JOGO AGORA 🎁</div>
+            <div class="attract-ninja-wrap">
+                <img src="ninja.png" alt="Ninja" onerror="this.src='https://placehold.co/100x100/d3122a/ffd100?text=NINJA';">
+            </div>
+            <div class="attract-prize-title" id="attractPrizeTitle">SACO DE PANO KOKA</div>
+            <div class="attract-stock-pill" id="attractStockPill">RESTAM 70 UNIDADES!</div>
+        </div>
+
+        <div class="attract-cta-footer" style="position: relative; z-index: 3;">
+            👆 TOCA NO ECRÃ PARA JOGAR!
+        </div>
+    </div>
+
     <!-- PIN KEYPAD MODAL -->
     <div class="pin-modal-overlay" id="pinModalOverlay">
         <div class="pin-keypad-card">
             <div class="pin-card-title" id="pinModalTitle">INTRODUZA O PIN</div>
             <div class="pin-hint-sub" id="pinHintSub">Use o ecrã ou os números do comando da TV</div>
             
-            <div class="pin-display-box">
+            <div class="pin-display-box" id="pinDisplayBox">
                 <div class="pin-dot" id="dot0"></div>
                 <div class="pin-dot" id="dot1"></div>
                 <div class="pin-dot" id="dot2"></div>
@@ -888,36 +1158,42 @@
             </div>
 
             <div class="keypad-grid" id="keypadGrid">
-                <button class="key-btn" onclick="pressKey('1')">1</button>
-                <button class="key-btn" onclick="pressKey('2')">2</button>
-                <button class="key-btn" onclick="pressKey('3')">3</button>
-                <button class="key-btn" onclick="pressKey('4')">4</button>
-                <button class="key-btn" onclick="pressKey('5')">5</button>
-                <button class="key-btn" onclick="pressKey('6')">6</button>
-                <button class="key-btn" onclick="pressKey('7')">7</button>
-                <button class="key-btn" onclick="pressKey('8')">8</button>
-                <button class="key-btn" onclick="pressKey('9')">9</button>
-                <button class="key-btn action-key cancel-key" onclick="closePinModal()">SAIR</button>
-                <button class="key-btn" onclick="pressKey('0')">0</button>
-                <button class="key-btn action-key clear-key" onclick="clearPin()">⌫</button>
+                <button type="button" class="key-btn" onclick="pressKey('1')">1</button>
+                <button type="button" class="key-btn" onclick="pressKey('2')">2</button>
+                <button type="button" class="key-btn" onclick="pressKey('3')">3</button>
+                <button type="button" class="key-btn" onclick="pressKey('4')">4</button>
+                <button type="button" class="key-btn" onclick="pressKey('5')">5</button>
+                <button type="button" class="key-btn" onclick="pressKey('6')">6</button>
+                <button type="button" class="key-btn" onclick="pressKey('7')">7</button>
+                <button type="button" class="key-btn" onclick="pressKey('8')">8</button>
+                <button type="button" class="key-btn" onclick="pressKey('9')">9</button>
+                <button type="button" class="key-btn action-key cancel-key" onclick="closePinModal()">SAIR</button>
+                <button type="button" class="key-btn" onclick="pressKey('0')">0</button>
+                <button type="button" class="key-btn action-key clear-key" onclick="clearPin()">⌫</button>
             </div>
 
-            <!-- ADMIN CONTROLS -->
             <div class="admin-options-container" id="adminOptionsContainer" style="display: none;">
                 <div class="admin-stock-editor" id="adminStockEditor"></div>
-                <button class="admin-opt-btn" onclick="toggleLockStateFromAdmin()">🔒 BLOQUEAR MÁQUINA</button>
-                <button class="admin-opt-btn" style="border-color: #ff0055; color: #ff0055; background: #2b000d;" onclick="requestStockResetWithPin()">⚠️ REPOR STOCK INICIAL</button>
-                <button class="admin-opt-btn" style="border-color: #aaa; color: #aaa;" onclick="closePinModal()">FECHAR MENU</button>
+                <div class="admin-btn-row">
+                    <button type="button" class="admin-opt-btn" onclick="toggleFullscreenTV()">📺 ECRÃ INTEIRO</button>
+                    <button type="button" class="admin-opt-btn" onclick="lockMachineFromAdmin()">🔒 BLOQUEAR</button>
+                </div>
+                <button type="button" class="admin-opt-btn" style="border-color: #ff0055; color: #ff0055; background: #2b000d;" onclick="requestStockResetWithPin()">⚠️ REPOR STOCK INICIAL</button>
+                <button type="button" class="admin-opt-btn" style="border-color: #aaa; color: #aaa;" onclick="closePinModal()">FECHAR MENU</button>
             </div>
         </div>
     </div>
 
     <!-- GACHA VICTORY OVERLAY -->
     <div class="gacha-overlay" id="gachaOverlay">
+        <div class="sunburst-rays"></div>
+        <div class="confetti-layer" id="confettiLayer"></div>
+        <div class="victory-flash"></div>
+
         <div class="gacha-card-container">
             <div class="gacha-trophy-card">
                 <div class="card-inner-content">
-                    <div class="rank-badge-pill" id="rankBadge">PARABÉNS! GANHASTE:</div>
+                    <div class="rank-badge-pill" id="rankBadge">🎉 PARABÉNS! GANHASTE: 🎉</div>
                     
                     <div class="ninja-avatar-stage">
                         <img id="ninjaImage" class="ninja-avatar-img" src="ninja.png" alt="Ninja Avatar" onerror="this.src='https://placehold.co/130x130/d3122a/ffd100?text=NINJA';">
@@ -947,7 +1223,7 @@
                     <div class="qr-pair-row">
                         <div class="qr-item">
                             <div class="qr-box">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.instagram.com/koka.portugal/" 
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://www.instagram.com/koka.portugal/" 
                                      alt="QR IG Koka" 
                                      onerror="this.parentElement.innerHTML='<span style=\'color:#000;font-weight:900;font-size:11px;\'>IG Koka</span>'">
                             </div>
@@ -956,7 +1232,7 @@
                         </div>
                         <div class="qr-item">
                             <div class="qr-box">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.tiktok.com/@koka.portugal" 
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://www.tiktok.com/@koka.portugal" 
                                      alt="QR TikTok Koka" 
                                      onerror="this.parentElement.innerHTML='<span style=\'color:#000;font-weight:900;font-size:11px;\'>TikTok Koka</span>'">
                             </div>
@@ -978,7 +1254,7 @@
                     <div class="qr-pair-row">
                         <div class="qr-item">
                             <div class="qr-box">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.instagram.com/5m_esportsl/" 
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://www.instagram.com/5m_esportsl/" 
                                      alt="QR IG 5M" 
                                      onerror="this.parentElement.innerHTML='<span style=\'color:#000;font-weight:900;font-size:11px;\'>IG 5M</span>'">
                             </div>
@@ -987,7 +1263,7 @@
                         </div>
                         <div class="qr-item">
                             <div class="qr-box">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.tiktok.com/@5m_esports?lang=pt" 
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://www.tiktok.com/@5m_esports?lang=pt" 
                                      alt="QR TikTok 5M" 
                                      onerror="this.parentElement.innerHTML='<span style=\'color:#000;font-weight:900;font-size:11px;\'>TikTok 5M</span>'">
                             </div>
@@ -1019,20 +1295,22 @@
             { id: 1, nome: "T-Shirt Koka", label: "T-SHIRT", stock: 110, cor: "#ff0055" },
             { id: 2, nome: "Panamá Koka", label: "PANAMÁ", stock: 200, cor: "#00f0ff" },
             { id: 3, nome: "Pauzinhos Koka", label: "PAUZINHOS", stock: 400, cor: "#00ff88" },
-            { id: 4, nome: "Prémio 5M", label: "PRÉMIO 5M", stock: Infinity, cor: "#c084fc" }
+            { id: 4, nome: "Prémio 5M", label: "PRÉMIO 5M", stock: 100, cor: "#c084fc" }
         ];
 
-        const STORAGE_KEY = "koka_5m_pachinko_stock_lgw_v2";
+        const STORAGE_KEY = "koka_5m_pachinko_stock_lgw_v3";
 
         function loadStockFromStorage() {
             try {
                 const saved = localStorage.getItem(STORAGE_KEY);
                 if (saved) {
                     const parsed = JSON.parse(saved);
-                    return parsed.map(item => ({
-                        ...item,
-                        stock: item.id === 4 ? Infinity : item.stock
-                    }));
+                    if (Array.isArray(parsed) && parsed.length === 5) {
+                        return parsed.map((item, idx) => ({
+                            ...INITIAL_ITEMS[idx],
+                            stock: typeof item.stock === 'number' ? item.stock : INITIAL_ITEMS[idx].stock
+                        }));
+                    }
                 }
             } catch (e) {}
             return INITIAL_ITEMS.map(item => ({ ...item }));
@@ -1045,6 +1323,89 @@
         }
 
         let itens = loadStockFromStorage();
+
+        // --- MODO SUSPENSÃO / ATTRACT MODE (10 SEGUNDOS) ---
+        const attractOverlay = document.getElementById('attractOverlay');
+        let idleTimer = null;
+        let attractCarouselInterval = null;
+        let attractPrizeIdx = 0;
+
+        function updateAttractPrizeSlide() {
+            const available = itens.filter(i => i.stock > 0);
+            const list = available.length > 0 ? available : itens;
+            const current = list[attractPrizeIdx % list.length];
+            attractPrizeIdx++;
+
+            const titleEl = document.getElementById('attractPrizeTitle');
+            const stockEl = document.getElementById('attractStockPill');
+            if (titleEl && stockEl && current) {
+                titleEl.textContent = current.nome;
+                titleEl.style.color = current.cor;
+                if (current.stock > 0) {
+                    stockEl.textContent = `RESTAM ${current.stock} UNIDADES!`;
+                    stockEl.style.color = "#00ff88";
+                    stockEl.style.borderColor = "#00ff88";
+                } else {
+                    stockEl.textContent = "ESGOTADO!";
+                    stockEl.style.color = "#ff0055";
+                    stockEl.style.borderColor = "#ff0055";
+                }
+            }
+        }
+
+        function enterAttractMode() {
+            if ((ball.active && !ball.isDemo) ||
+                pinModalOverlay.classList.contains('active') ||
+                gachaOverlay.classList.contains('active') ||
+                !socialGateModal.classList.contains('hidden')) {
+                resetIdleTimer();
+                return;
+            }
+
+            attractPrizeIdx = 0;
+            updateAttractPrizeSlide();
+            attractOverlay.classList.add('active');
+
+            if (attractCarouselInterval) clearInterval(attractCarouselInterval);
+            attractCarouselInterval = setInterval(updateAttractPrizeSlide, 2200);
+        }
+
+        function exitAttractMode() {
+            if (attractOverlay.classList.contains('active')) {
+                attractOverlay.classList.remove('active');
+                if (attractCarouselInterval) {
+                    clearInterval(attractCarouselInterval);
+                    attractCarouselInterval = null;
+                }
+            }
+            resetIdleTimer();
+        }
+
+        function resetIdleTimer() {
+            if (idleTimer) clearTimeout(idleTimer);
+            idleTimer = setTimeout(enterAttractMode, 10000);
+        }
+
+        document.addEventListener('pointerdown', (e) => {
+            if (attractOverlay.classList.contains('active')) {
+                e.stopPropagation();
+                exitAttractMode();
+            } else {
+                resetIdleTimer();
+            }
+        }, true);
+
+        // --- FULLSCREEN TOGGLE FOR TV ---
+        function toggleFullscreenTV() {
+            try {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            } catch (e) {}
+            closePinModal();
+        }
 
         // --- KIOSK PIN SECURITY (PIN: 8912) ---
         const CORRECT_PIN = "8912";
@@ -1059,63 +1420,164 @@
         const pinModalOverlay = document.getElementById('pinModalOverlay');
         const pinModalTitle = document.getElementById('pinModalTitle');
         const pinHintSub = document.getElementById('pinHintSub');
+        const pinDisplayBox = document.getElementById('pinDisplayBox');
         const keypadGrid = document.getElementById('keypadGrid');
         const adminOptionsContainer = document.getElementById('adminOptionsContainer');
+
+        // --- PRESS & HOLD PARA SUBTRAIR / ADICIONAR RÁPIDO ---
+        let holdTimeout = null;
+        let holdInterval = null;
+
+        function stopStockHold() {
+            if (holdTimeout) {
+                clearTimeout(holdTimeout);
+                holdTimeout = null;
+            }
+            if (holdInterval) {
+                clearInterval(holdInterval);
+                holdInterval = null;
+            }
+        }
+
+        function startStockHold(index, delta) {
+            stopStockHold();
+            adjustSingleStock(index, delta);
+
+            holdTimeout = setTimeout(() => {
+                let ticks = 0;
+                holdInterval = setInterval(() => {
+                    ticks++;
+                    const stepMultiplier = ticks > 25 ? 10 : (ticks > 10 ? 5 : 1);
+                    adjustSingleStock(index, delta * stepMultiplier);
+                }, 75);
+            }, 350);
+        }
+
+        window.addEventListener('mouseup', stopStockHold);
+        window.addEventListener('touchend', stopStockHold);
+        window.addEventListener('touchcancel', stopStockHold);
 
         function renderAdminStockEditor() {
             const editor = document.getElementById('adminStockEditor');
             if (!editor) return;
-            editor.innerHTML = '';
+            editor.innerHTML = '<div class="admin-stock-hint">💡 Mantenha pressionado + ou - para alterar rápido</div>';
             itens.forEach((item, index) => {
-                if (item.stock === Infinity) return;
-                editor.innerHTML += `
-                    <div class="admin-stock-row">
-                        <span>${item.nome}</span>
-                        <div class="admin-stock-controls">
-                            <button class="stock-step-btn" onclick="adjustSingleStock(${index}, -1)">-</button>
-                            <span class="stock-val-badge" id="adminVal_${index}">${item.stock}</span>
-                            <button class="stock-step-btn" onclick="adjustSingleStock(${index}, 1)">+</button>
-                        </div>
-                    </div>
-                `;
+                const row = document.createElement('div');
+                row.className = 'admin-stock-row';
+
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = item.nome;
+
+                const controlsDiv = document.createElement('div');
+                controlsDiv.className = 'admin-stock-controls';
+
+                const minusBtn = document.createElement('button');
+                minusBtn.type = 'button';
+                minusBtn.className = 'stock-step-btn';
+                minusBtn.textContent = '-';
+                minusBtn.addEventListener('mousedown', (e) => { e.preventDefault(); startStockHold(index, -1); });
+                minusBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startStockHold(index, -1); });
+
+                const valBadge = document.createElement('span');
+                valBadge.className = 'stock-val-badge';
+                valBadge.id = `adminVal_${index}`;
+                valBadge.textContent = item.stock;
+
+                const plusBtn = document.createElement('button');
+                plusBtn.type = 'button';
+                plusBtn.className = 'stock-step-btn';
+                plusBtn.textContent = '+';
+                plusBtn.addEventListener('mousedown', (e) => { e.preventDefault(); startStockHold(index, 1); });
+                plusBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startStockHold(index, 1); });
+
+                controlsDiv.appendChild(minusBtn);
+                controlsDiv.appendChild(valBadge);
+                controlsDiv.appendChild(plusBtn);
+
+                row.appendChild(nameSpan);
+                row.appendChild(controlsDiv);
+                editor.appendChild(row);
             });
         }
 
         function adjustSingleStock(index, delta) {
-            if (itens[index].stock === Infinity) return;
             itens[index].stock = Math.max(0, itens[index].stock + delta);
             saveStockToStorage();
             updateStockDisplay();
+            checkSoldOutState();
+            drawStaticBoard();
             const badge = document.getElementById(`adminVal_${index}`);
-            if (badge) badge.innerText = itens[index].stock;
-            playPegSound(0.2);
+            if (badge) badge.textContent = itens[index].stock;
         }
 
-        function openPinModal() {
-            registerActivity();
+        function checkSoldOutState() {
+            const totalStock = itens.reduce((sum, item) => sum + item.stock, 0);
+            const lockIconMain = document.getElementById('lockIconMain');
+            const lockTitleMain = document.getElementById('lockTitleMain');
+            const lockSubMain = document.getElementById('lockSubMain');
+
+            if (totalStock <= 0) {
+                lockIconMain.textContent = "🏆";
+                lockTitleMain.textContent = "PRÉMIOS ESGOTADOS POR HOJE!";
+                lockSubMain.textContent = "OBRIGADO PELA VISITA • KOKA × 5M";
+                cabinetLockBanner.classList.remove('hidden');
+                displayOut.innerText = "PRÉMIOS ESGOTADOS POR HOJE";
+                actionBtn.disabled = true;
+            } else {
+                lockIconMain.textContent = "🔒";
+                lockTitleMain.textContent = "MÁQUINA BLOQUEADA";
+                lockSubMain.textContent = "TAPE OU USE O COMANDO PARA DESBLOQUEAR";
+                if (!isLocked) {
+                    cabinetLockBanner.classList.add('hidden');
+                    if (!ball.active || ball.isDemo) {
+                        actionBtn.disabled = false;
+                        displayOut.innerText = "PRONTO PARA JOGAR";
+                    }
+                }
+            }
+        }
+
+        function openPinEntry() {
+            exitAttractMode();
+            stopStockHold();
+            if (ball.isDemo) {
+                ball.active = false;
+                ball.isDemo = false;
+                drawStaticBoard();
+            }
             currentPin = "";
             pinActionMode = "UNLOCK";
             updatePinDots();
-            if (!isLocked) {
-                pinModalTitle.innerText = "MENU ADMIN CABINE";
-                pinModalTitle.style.color = "var(--koka-yellow)";
-                pinHintSub.style.display = "none";
-                keypadGrid.style.display = "none";
-                document.querySelector('.pin-display-box').style.display = "none";
-                renderAdminStockEditor();
-                adminOptionsContainer.style.display = "flex";
-            } else {
-                pinModalTitle.innerText = "INTRODUZA O PIN";
-                pinModalTitle.style.color = "var(--koka-yellow)";
-                pinHintSub.style.display = "block";
-                keypadGrid.style.display = "grid";
-                document.querySelector('.pin-display-box').style.display = "flex";
-                adminOptionsContainer.style.display = "none";
+
+            pinModalTitle.innerText = "INTRODUZA O PIN";
+            pinModalTitle.style.color = "var(--koka-yellow)";
+            pinHintSub.style.display = "block";
+            pinDisplayBox.style.display = "flex";
+            keypadGrid.style.display = "grid";
+            adminOptionsContainer.style.display = "none";
+
+            pinModalOverlay.classList.add('active');
+        }
+
+        function openAdminOrPin() {
+            if (isLocked) {
+                openPinEntry();
+                return;
             }
+            exitAttractMode();
+            stopStockHold();
+            pinModalTitle.innerText = "MENU ADMIN CABINE";
+            pinModalTitle.style.color = "var(--koka-yellow)";
+            pinHintSub.style.display = "none";
+            keypadGrid.style.display = "none";
+            pinDisplayBox.style.display = "none";
+            renderAdminStockEditor();
+            adminOptionsContainer.style.display = "flex";
             pinModalOverlay.classList.add('active');
         }
 
         function requestStockResetWithPin() {
+            stopStockHold();
             currentPin = "";
             pinActionMode = "RESET_STOCK";
             updatePinDots();
@@ -1123,7 +1585,7 @@
             pinModalTitle.style.color = "#ff0055";
             pinHintSub.style.display = "block";
             adminOptionsContainer.style.display = "none";
-            document.querySelector('.pin-display-box').style.display = "flex";
+            pinDisplayBox.style.display = "flex";
             keypadGrid.style.display = "grid";
         }
 
@@ -1137,39 +1599,38 @@
             });
 
             updateStockDisplay();
-            playGachaVictoryFanfare();
+            checkSoldOutState();
+            drawStaticBoard();
             pinModalTitle.innerText = "✅ STOCK REPOSTO!";
             pinModalTitle.style.color = "#00ff88";
 
             setTimeout(() => {
                 closePinModal();
-            }, 800);
+            }, 600);
         }
 
         function closePinModal() {
+            stopStockHold();
             pinModalOverlay.classList.remove('active');
             currentPin = "";
             pinActionMode = "UNLOCK";
+            resetIdleTimer();
         }
 
         function pressKey(digit) {
-            registerActivity();
             if (currentPin.length < 4) {
-                currentPin += digit;
+                currentPin += String(digit);
                 updatePinDots();
-                playPegSound(0.2);
                 if (currentPin.length === 4) {
-                    setTimeout(verifyPin, 150);
+                    setTimeout(verifyPin, 120);
                 }
             }
         }
 
         function clearPin() {
-            registerActivity();
             if (currentPin.length > 0) {
                 currentPin = currentPin.slice(0, -1);
                 updatePinDots();
-                playPegSound(0.1);
             }
         }
 
@@ -1194,11 +1655,11 @@
                 } else {
                     isLocked = false;
                     updateKioskLockUI();
-                    playGachaVictoryFanfare();
-                    pinModalTitle.innerText = "ACESSO CONCEDIDO!";
+                    pinModalTitle.innerText = "✅ MÁQUINA DESBLOQUEADA!";
+                    pinModalTitle.style.color = "#00ff88";
                     setTimeout(() => {
-                        openPinModal();
-                    }, 250);
+                        closePinModal();
+                    }, 350);
                 }
             } else {
                 for (let i = 0; i < 4; i++) {
@@ -1208,12 +1669,12 @@
                 setTimeout(() => {
                     currentPin = "";
                     updatePinDots();
-                }, 500);
+                }, 400);
             }
         }
 
-        function toggleLockStateFromAdmin() {
-            isLocked = !isLocked;
+        function lockMachineFromAdmin() {
+            isLocked = true;
             updateKioskLockUI();
             closePinModal();
         }
@@ -1227,30 +1688,39 @@
             } else {
                 kioskToggleBtn.className = "kiosk-btn unlocked";
                 kioskIcon.innerText = "🔓";
-                kioskStatusText.innerText = "MODO ADMIN / DESBLOQUEADO";
+                kioskStatusText.innerText = "MODO ADMIN / EDITAR STOCK";
                 cabinetLockBanner.classList.add('hidden');
-                if (ball.isGhost) {
+                if (ball.isDemo) {
                     ball.active = false;
-                    ball.isGhost = false;
+                    ball.isDemo = false;
                 }
+                checkSoldOutState();
+                drawStaticBoard();
             }
         }
 
         function resetNextPlayer() {
-            registerActivity();
             document.getElementById('checkKoka').checked = false;
             document.getElementById('check5M').checked = false;
             validateSocialGate();
             displayOut.innerText = "PRONTO PARA JOGAR";
             displayOut.style.color = "#ffffff";
             gachaOverlay.classList.remove('active');
+            document.getElementById('confettiLayer').innerHTML = '';
             socialGateModal.classList.add('hidden');
-            actionBtn.disabled = false;
+            checkSoldOutState();
+            drawStaticBoard();
+            resetIdleTimer();
         }
 
         // --- TV REMOTE & KEYBOARD SUPPORT ---
         document.addEventListener('keydown', (e) => {
-            registerActivity();
+            if (attractOverlay.classList.contains('active')) {
+                e.preventDefault();
+                exitAttractMode();
+                return;
+            }
+            resetIdleTimer();
 
             if (pinModalOverlay.classList.contains('active')) {
                 if (e.key >= '0' && e.key <= '9') {
@@ -1300,26 +1770,28 @@
             }
         });
 
-        // --- AUDIO LEVE ---
+        // --- AUDIO ARCADE ---
         let audioCtx = null;
         function initAudio() {
             if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) audioCtx = new AudioContext();
             }
         }
 
         let lastSoundTime = 0;
-        function playPegSound(vol = 0.12) {
-            if (!audioCtx || ball.isGhost) return;
+        function playPegSound(heightProgress = 0.5) {
+            if (!audioCtx || ball.isDemo) return;
             const now = Date.now();
-            if (now - lastSoundTime < 45) return; // Evita sobrecarga de áudio na TV
+            if (now - lastSoundTime < 60) return;
             lastSoundTime = now;
             try {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(750 + Math.random() * 400, audioCtx.currentTime);
-                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+                const baseFreq = 520 + (heightProgress * 650) + (Math.random() * 80);
+                osc.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.14, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
@@ -1328,45 +1800,46 @@
             } catch (e) {}
         }
 
-        function playLaunchSound() {
-            if (!audioCtx) return;
-            try {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(220, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.16);
-                gain.gain.setValueAtTime(0.22, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.16);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.16);
-            } catch (e) {}
-        }
-
         function playGachaVictoryFanfare() {
             if (!audioCtx) return;
             try {
                 const now = audioCtx.currentTime + 0.05;
-                const notes = [523.25, 659.25, 783.99, 1046.50];
+                const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
+                const times = [0, 0.08, 0.16, 0.24, 0.36, 0.46];
                 notes.forEach((freq, idx) => {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
                     osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(freq, now + (idx * 0.08));
-                    gain.gain.setValueAtTime(0.2, now + (idx * 0.08));
-                    const dur = (idx === notes.length - 1) ? 0.5 : 0.12;
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + (idx * 0.08) + dur);
+                    osc.frequency.setValueAtTime(freq, now + times[idx]);
+                    gain.gain.setValueAtTime(0.24, now + times[idx]);
+                    const dur = (idx === notes.length - 1) ? 0.65 : 0.13;
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + times[idx] + dur);
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
-                    osc.start(now + (idx * 0.08));
-                    osc.stop(now + (idx * 0.08) + dur);
+                    osc.start(now + times[idx]);
+                    osc.stop(now + times[idx] + dur);
                 });
             } catch (e) {}
         }
 
-        // --- PACHINKO CANVAS & FÍSICA OTIMIZADA ---
+        // --- CONFETTI CSS LEVE PARA VITÓRIA ---
+        function spawnVictoryConfetti() {
+            const layer = document.getElementById('confettiLayer');
+            if (!layer) return;
+            layer.innerHTML = '';
+            const colors = ['#ffd100', '#ff0055', '#00f0ff', '#00ff88', '#ffffff'];
+            for (let i = 0; i < 24; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = (Math.random() * 98) + '%';
+                piece.style.backgroundColor = colors[i % colors.length];
+                piece.style.animationDuration = (1.6 + Math.random() * 1.6) + 's';
+                piece.style.animationDelay = (Math.random() * 0.6) + 's';
+                layer.appendChild(piece);
+            }
+        }
+
+        // --- PACHINKO CANVAS ---
         const canvas = document.getElementById('pachinkoCanvas');
         const ctx = canvas.getContext('2d', { alpha: false });
 
@@ -1374,30 +1847,33 @@
         let slotWidth = 100;
         let pegs = [];
         let slots = [];
+        let animFrameId = null;
+        let trail = [];
 
         function initBoardGeometry() {
-            canvas.width = canvas.clientWidth || 800;
-            canvas.height = canvas.clientHeight || 400;
+            const scale = 0.55;
+            canvas.width = Math.floor((canvas.clientWidth || 800) * scale);
+            canvas.height = Math.floor((canvas.clientHeight || 400) * scale);
             
             slotWidth = canvas.width / numSlots;
             pegs = [];
             slots = [];
 
             const isPortrait = window.innerHeight > window.innerWidth;
-            const rows = isPortrait ? 11 : 8;
-            const startY = 40;
-            const rowSpacing = (canvas.height - 120) / rows;
+            const rows = isPortrait ? 13 : 9;
+            const startY = 22;
+            const rowSpacing = (canvas.height - 65) / rows;
 
             for (let r = 0; r < rows; r++) {
                 const pegsInRow = isPortrait 
-                    ? (r % 2 === 0 ? 9 : 8) 
-                    : (r % 2 === 0 ? 12 : 11);
-                const marginX = r % 2 === 0 ? 30 : 50;
+                    ? (r % 2 === 0 ? 10 : 9) 
+                    : (r % 2 === 0 ? 14 : 13);
+                const marginX = r % 2 === 0 ? 14 : 26;
                 const spacingX = (canvas.width - marginX * 2) / (pegsInRow - 1);
                 const y = startY + r * rowSpacing;
 
                 for (let i = 0; i < pegsInRow; i++) {
-                    pegs.push({ x: marginX + i * spacingX, y: y, r: 4 });
+                    pegs.push({ x: marginX + i * spacingX, y: y, r: 3, hitFlash: 0 });
                 }
             }
 
@@ -1405,44 +1881,40 @@
                 slots.push({
                     xStart: i * slotWidth,
                     xEnd: (i + 1) * slotWidth,
-                    y: canvas.height - 50,
+                    y: canvas.height - 28,
                     item: itens[i]
                 });
             }
+
+            drawStaticBoard();
         }
 
         window.addEventListener('resize', initBoardGeometry);
 
-        let ball = { x: 0, y: 0, vx: 0, vy: 0, r: 9, active: false, stuckTimer: 0, isGhost: false, targetIndex: 0 };
+        let ball = { x: 0, y: 0, vx: 0, vy: 0, r: 5.2, active: false, isDemo: false, stuckTimer: 0, targetIndex: 0 };
         let selectedPrize = null;
-        const gravity = 0.28;
-        const bounce = 0.45;
-
-        let lastInteractionTime = Date.now();
-        function registerActivity() {
-            lastInteractionTime = Date.now();
-        }
-        ['click', 'touchstart'].forEach(evt => {
-            window.addEventListener(evt, registerActivity, { passive: true });
-        });
+        const gravity = 0.16;
+        const bounce = 0.68;
 
         setInterval(() => {
-            const idleSeconds = (Date.now() - lastInteractionTime) / 1000;
-            if (!ball.active && (isLocked || idleSeconds > 45)) {
-                launchGhostBall();
+            if (attractOverlay.classList.contains('active') && !ball.active) {
+                launchDemoBall();
             }
-        }, 6000);
+        }, 4500);
 
-        function launchGhostBall() {
+        function launchDemoBall() {
             if (ball.active) return;
-            ball.x = Math.random() * (canvas.width - 60) + 30;
-            ball.y = 15;
-            ball.vx = (Math.random() * 2 - 1);
-            ball.vy = 1.5;
+            ball.x = 25 + Math.random() * (canvas.width - 50);
+            ball.y = 8;
+            ball.vx = (Math.random() * 3 - 1.5);
+            ball.vy = 0.9;
             ball.active = true;
-            ball.stuckTimer = 0;
-            ball.isGhost = true;
+            ball.isDemo = true;
             ball.targetIndex = Math.floor(Math.random() * numSlots);
+            ball.stuckTimer = 0;
+            trail = [];
+            if (animFrameId) cancelAnimationFrame(animFrameId);
+            gameLoop();
         }
 
         const gachaOverlay = document.getElementById('gachaOverlay');
@@ -1451,10 +1923,12 @@
             const cardPrizeLabel = document.getElementById('cardPrizeLabel');
             const cardPrizeName = document.getElementById('cardPrizeName');
 
-            rankBadge.innerText = "PARABÉNS! GANHASTE:";
+            rankBadge.innerText = "🎉 PARABÉNS! GANHASTE: 🎉";
             cardPrizeLabel.innerText = "PRÉMIO DESBLOQUEADO!";
             cardPrizeName.innerText = prize.nome;
+            cardPrizeName.style.color = prize.cor;
 
+            spawnVictoryConfetti();
             gachaOverlay.classList.add('active');
             playGachaVictoryFanfare();
         }
@@ -1465,12 +1939,17 @@
         const displayOut = document.getElementById('displayOut');
 
         function handleLaunchClick() {
-            registerActivity();
+            exitAttractMode();
             if (isLocked) {
-                openPinModal();
+                openPinEntry();
                 return;
             }
-            if (ball.active && !ball.isGhost) return;
+            const totalStock = itens.reduce((sum, item) => sum + item.stock, 0);
+            if (totalStock <= 0) {
+                checkSoldOutState();
+                return;
+            }
+            if (ball.active && !ball.isDemo) return;
             openSocialGate();
         }
 
@@ -1494,9 +1973,8 @@
             if (!stockList) return;
             stockList.innerHTML = '';
             itens.forEach(i => {
-                const isUnlimited = i.stock === Infinity;
-                const stockText = isUnlimited ? '∞' : (i.stock <= 0 ? 'ESGOTADO' : i.stock + ' un');
-                const colorStyle = (!isUnlimited && i.stock <= 0) ? 'color:#ff0055;' : '';
+                const stockText = i.stock <= 0 ? 'ESGOTADO' : i.stock + ' un';
+                const colorStyle = i.stock <= 0 ? 'color:#ff0055;' : '';
                 stockList.innerHTML += `
                     <div class="inventory-item">
                         <span>> ${i.nome}:</span>
@@ -1506,167 +1984,200 @@
         }
 
         function dropBall() {
-            if (ball.active && !ball.isGhost) return;
+            if (ball.active && !ball.isDemo) return;
             initAudio();
 
             const validItens = itens.filter(i => i.stock > 0);
             if (validItens.length === 0) {
-                displayOut.innerText = "SEM STOCK DISPONÍVEL";
+                checkSoldOutState();
                 return;
             }
 
-            playLaunchSound();
-
             selectedPrize = validItens[Math.floor(Math.random() * validItens.length)];
             const targetIndex = itens.findIndex(i => i.id === selectedPrize.id);
-            const targetX = (targetIndex * slotWidth) + (slotWidth / 2);
             
-            ball.x = targetX + (Math.random() * 80 - 40); 
-            if (ball.x < 25) ball.x = 25;
-            if (ball.x > canvas.width - 25) ball.x = canvas.width - 25;
-            
-            ball.y = 15;
-            ball.vx = (Math.random() * 2 - 1);
-            ball.vy = 1.5;
+            ball.x = 25 + Math.random() * (canvas.width - 50);
+            ball.y = 8;
+            ball.vx = (Math.random() * 3 - 1.5);
+            ball.vy = 0.8;
             ball.active = true;
-            ball.isGhost = false;
+            ball.isDemo = false;
             ball.targetIndex = targetIndex;
             ball.stuckTimer = 0;
+            trail = [];
 
             actionBtn.disabled = true;
             displayOut.innerText = "BOLA EM MOVIMENTO...";
             displayOut.style.color = "var(--koka-yellow)";
+
+            if (animFrameId) cancelAnimationFrame(animFrameId);
+            gameLoop();
         }
 
-        function gameLoop() {
-            // Fundo sólido rápido (sem transparência pesada)
+        function drawStaticBoard() {
             ctx.fillStyle = '#180004';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Desenho otimizado dos pinos (sem shadowBlur)
             ctx.fillStyle = '#ffd100';
             ctx.beginPath();
             for (let i = 0; i < pegs.length; i++) {
                 const peg = pegs[i];
-                ctx.moveTo(peg.x + peg.r, peg.y);
-                ctx.arc(peg.x, peg.y, peg.r, 0, Math.PI * 2);
+                if (peg.hitFlash <= 0) {
+                    ctx.moveTo(peg.x + peg.r, peg.y);
+                    ctx.arc(peg.x, peg.y, peg.r, 0, Math.PI * 2);
+                }
             }
             ctx.fill();
 
-            // Divisórias das casas
-            ctx.strokeStyle = 'rgba(255, 209, 0, 0.45)';
-            ctx.lineWidth = 3;
+            for (let i = 0; i < pegs.length; i++) {
+                const peg = pegs[i];
+                if (peg.hitFlash > 0) {
+                    ctx.fillStyle = peg.hitFlash > 5 ? '#ffffff' : '#00f0ff';
+                    ctx.beginPath();
+                    ctx.arc(peg.x, peg.y, peg.r + 2.2, 0, Math.PI * 2);
+                    ctx.fill();
+                    peg.hitFlash--;
+                }
+            }
+
+            ctx.strokeStyle = '#806800';
+            ctx.lineWidth = 2;
             ctx.beginPath();
             for (let i = 1; i < numSlots; i++) {
-                ctx.moveTo(i * slotWidth, canvas.height - 65);
+                ctx.moveTo(i * slotWidth, canvas.height - 36);
                 ctx.lineTo(i * slotWidth, canvas.height);
             }
             ctx.stroke();
 
-            // Etiquetas das casas
-            ctx.font = "bold 14px Arial, sans-serif";
+            ctx.font = "bold 9px Arial, sans-serif";
             ctx.textAlign = "center";
             for (let i = 0; i < slots.length; i++) {
                 const slot = slots[i];
                 const isOut = slot.item.stock <= 0;
                 ctx.fillStyle = isOut ? '#2b050c' : '#26080d';
-                ctx.fillRect(slot.xStart + 3, canvas.height - 50, slotWidth - 6, 46);
+                ctx.fillRect(slot.xStart + 2, canvas.height - 28, slotWidth - 4, 26);
                 
                 ctx.fillStyle = isOut ? '#666666' : slot.item.cor;
-                ctx.fillText(isOut ? "ESGOTADO" : slot.item.label, slot.xStart + slotWidth / 2, canvas.height - 20);
+                ctx.fillText(isOut ? "ESGOTADO" : slot.item.label, slot.xStart + slotWidth / 2, canvas.height - 12);
+            }
+        }
+
+        function gameLoop() {
+            if (!ball.active) {
+                drawStaticBoard();
+                return;
             }
 
-            // Física da bola
-            if (ball.active) {
-                ball.vy += gravity;
+            drawStaticBoard();
 
-                if (!ball.isGhost && ball.y > canvas.height * 0.55) {
-                    const currentCol = Math.min(Math.max(Math.floor(ball.x / slotWidth), 0), numSlots - 1);
-                    if (itens[currentCol].stock <= 0 || ball.y > canvas.height * 0.72) {
-                        const targetCenterX = (ball.targetIndex * slotWidth) + (slotWidth / 2);
-                        const diffX = targetCenterX - ball.x;
-                        ball.vx += diffX * 0.0025;
-                    }
+            ball.vy += gravity;
+
+            if (!ball.isDemo && ball.y > canvas.height * 0.72) {
+                const currentCol = Math.min(Math.max(Math.floor(ball.x / slotWidth), 0), numSlots - 1);
+                if (itens[currentCol].stock <= 0 || ball.y > canvas.height * 0.80) {
+                    const targetCenterX = (ball.targetIndex * slotWidth) + (slotWidth / 2);
+                    const diffX = targetCenterX - ball.x;
+                    ball.vx += diffX * 0.004;
                 }
+            }
 
-                ball.x += ball.vx;
-                ball.y += ball.vy;
+            ball.x += ball.vx;
+            ball.y += ball.vy;
 
-                if (Math.abs(ball.vx) < 0.1 && Math.abs(ball.vy) < 0.5) {
-                    ball.stuckTimer++;
-                    if (ball.stuckTimer > 90) {
-                        ball.vx = (Math.random() - 0.5) * 4;
-                        ball.vy = 2;
-                        ball.stuckTimer = 0;
-                    }
-                } else {
+            trail.push({ x: ball.x, y: ball.y });
+            if (trail.length > 6) trail.shift();
+
+            if (Math.abs(ball.vx) < 0.12 && Math.abs(ball.vy) < 0.45) {
+                ball.stuckTimer++;
+                if (ball.stuckTimer > 35) {
+                    ball.vx = (Math.random() > 0.5 ? 1 : -1) * (1.8 + Math.random());
+                    ball.vy = 1.2;
                     ball.stuckTimer = 0;
                 }
+            } else {
+                ball.stuckTimer = 0;
+            }
 
-                if (ball.x - ball.r < 0) { 
-                    ball.x = ball.r; 
-                    ball.vx *= -bounce; 
-                    playPegSound(0.08); 
-                }
-                if (ball.x + ball.r > canvas.width) { 
-                    ball.x = canvas.width - ball.r; 
-                    ball.vx *= -bounce; 
-                    playPegSound(0.08); 
-                }
+            const progress = Math.min(Math.max(ball.y / canvas.height, 0), 1);
 
-                for (let i = 0; i < pegs.length; i++) {
-                    const peg = pegs[i];
-                    const dx = ball.x - peg.x;
-                    const dy = ball.y - peg.y;
-                    const distSq = dx * dx + dy * dy;
-                    const minDist = ball.r + peg.r;
-                    if (distSq < minDist * minDist) {
-                        const dist = Math.sqrt(distSq) || 1;
-                        const overlap = minDist - dist;
-                        const nx = dx / dist;
-                        const ny = dy / dist;
-                        ball.x += nx * overlap;
-                        ball.y += ny * overlap;
-                        const dotProduct = ball.vx * nx + ball.vy * ny;
-                        ball.vx = (ball.vx - 2 * dotProduct * nx) * bounce + (Math.random() * 0.6 - 0.3);
-                        ball.vy = (ball.vy - 2 * dotProduct * ny) * bounce;
-                        playPegSound(0.15);
+            if (ball.x - ball.r < 0) { 
+                ball.x = ball.r; 
+                ball.vx = Math.abs(ball.vx) * 0.85; 
+                playPegSound(progress); 
+            }
+            if (ball.x + ball.r > canvas.width) { 
+                ball.x = canvas.width - ball.r; 
+                ball.vx = -Math.abs(ball.vx) * 0.85; 
+                playPegSound(progress); 
+            }
+
+            for (let i = 0; i < pegs.length; i++) {
+                const peg = pegs[i];
+                const dx = ball.x - peg.x;
+                const dy = ball.y - peg.y;
+                const distSq = dx * dx + dy * dy;
+                const minDist = ball.r + peg.r;
+                if (distSq < minDist * minDist) {
+                    const dist = Math.sqrt(distSq) || 1;
+                    const overlap = minDist - dist;
+                    const nx = dx / dist;
+                    const ny = dy / dist;
+                    ball.x += nx * overlap;
+                    ball.y += ny * overlap;
+                    const dotProduct = ball.vx * nx + ball.vy * ny;
+                    const kick = (Math.random() - 0.5) * 2.2;
+                    ball.vx = (ball.vx - 2 * dotProduct * nx) * bounce + kick;
+                    ball.vy = (ball.vy - 2 * dotProduct * ny) * bounce;
+                    peg.hitFlash = 10;
+                    playPegSound(progress);
+                }
+            }
+
+            if (ball.y >= canvas.height - 28) {
+                const wasDemo = ball.isDemo;
+                ball.active = false;
+                ball.isDemo = false;
+                trail = [];
+                drawStaticBoard();
+
+                if (wasDemo) return;
+
+                let finalIndex = Math.min(Math.max(Math.floor(ball.x / slotWidth), 0), numSlots - 1);
+                if (itens[finalIndex].stock <= 0) {
+                    finalIndex = ball.targetIndex;
+                }
+                const finalPrize = itens[finalIndex];
+
+                setTimeout(() => {
+                    if (finalPrize.stock > 0) {
+                        finalPrize.stock--;
+                        saveStockToStorage();
                     }
-                }
+                    displayOut.innerText = `GANHASTE: ${finalPrize.nome.toUpperCase()}`;
+                    updateStockDisplay();
+                    drawStaticBoard();
+                    triggerGachaVictory(finalPrize);
+                }, 180);
+                return;
+            }
 
-                if (ball.y >= canvas.height - 50) {
-                    ball.active = false;
-
-                    if (ball.isGhost) {
-                        ball.isGhost = false;
-                        requestAnimationFrame(gameLoop);
-                        return;
-                    }
-
-                    let finalIndex = Math.min(Math.max(Math.floor(ball.x / slotWidth), 0), numSlots - 1);
-                    if (itens[finalIndex].stock <= 0) {
-                        finalIndex = ball.targetIndex;
-                    }
-                    const finalPrize = itens[finalIndex];
-
-                    setTimeout(() => {
-                        if (finalPrize.stock !== Infinity && finalPrize.stock > 0) {
-                            finalPrize.stock--;
-                            saveStockToStorage();
-                        }
-                        displayOut.innerText = `GANHASTE: ${finalPrize.nome.toUpperCase()}`;
-                        updateStockDisplay();
-                        triggerGachaVictory(finalPrize);
-                    }, 200);
-                }
-
+            for (let i = 0; i < trail.length; i++) {
+                const t = trail[i];
+                const ratio = (i + 1) / trail.length;
                 ctx.beginPath();
-                ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
-                ctx.fillStyle = ball.isGhost ? "rgba(255, 255, 255, 0.5)" : "#ffffff";
+                ctx.arc(t.x, t.y, ball.r * ratio * 0.85, 0, Math.PI * 2);
+                ctx.fillStyle = ball.isDemo 
+                    ? `rgba(0, 240, 255, ${ratio * 0.25})` 
+                    : `rgba(255, 209, 0, ${ratio * 0.35})`;
                 ctx.fill();
             }
 
-            requestAnimationFrame(gameLoop);
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+            ctx.fillStyle = ball.isDemo ? "rgba(255, 255, 255, 0.75)" : "#ffffff";
+            ctx.fill();
+
+            animFrameId = requestAnimationFrame(gameLoop);
         }
 
         document.getElementById('gachaClaimBtn').addEventListener('click', () => {
@@ -1677,7 +2188,8 @@
             initBoardGeometry();
             updateKioskLockUI();
             updateStockDisplay();
-            gameLoop();
+            checkSoldOutState();
+            resetIdleTimer();
         });
     </script>
 </body>
